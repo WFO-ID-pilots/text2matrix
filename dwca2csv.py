@@ -2,7 +2,13 @@ import argparse
 from dwca.read import DwCAReader
 from dwca.darwincore.utils import qualname as qn
 from dwca.read import DwCAReader
+from dwca.descriptors import DataFileDescriptor
 import pandas as pd
+import re
+from lxml import html
+
+def strip_html(s):
+    return str(html.fragment_fromstring(s, create_parent = True).text_content())
         
 def dwca2df(dwcafile):
     with DwCAReader(dwcafile) as dwca:
@@ -10,7 +16,11 @@ def dwca2df(dwcafile):
         header_mapper = {header:short_header for header, short_header in zip(dwca.descriptor.core.headers, dwca.descriptor.core.short_headers)}        
         # Add an extra mapping for the coreid
         header_mapper['http://rs.tdwg.org/dwc/terms/taxonID'] = 'coreid'
-
+        # Add extra mappings for headers with default values
+        missing_headers = (header for header in dwca.descriptor.core.fields if header["index"] == None)
+        for header in missing_headers:
+            header_mapper[header['term']] = re.sub("^.*\/", "", header['term'])
+        
         # Now we collate the dict format core rows
         rows = []
         # Iterate over all core rows
@@ -20,6 +30,7 @@ def dwca2df(dwcafile):
 
         # Convert our list of dictionaries to a pandas dataframe
         df = pd.DataFrame(rows)
+
         return df
 
 def dwcaext2df(dwcafile, extensiontype="http://rs.gbif.org/terms/1.0/Description"):
@@ -32,6 +43,10 @@ def dwcaext2df(dwcafile, extensiontype="http://rs.gbif.org/terms/1.0/Description
                 header_mapper = {header:short_header for header, short_header in zip(ext.headers, ext.short_headers)}
         # Add an extra mapping for the coreid
         header_mapper['http://rs.tdwg.org/dwc/terms/taxonID'] = 'coreid'
+        # Add extra mappings for headers with default values
+        missing_headers = (header for header in dwca.descriptor.core.fields if header["index"] == None)
+        for header in missing_headers:
+            header_mapper[header['term']] = re.sub("^.*\/", "", header['term'])
 
         # Now we collate the dict format rows for the selected extension type
         ext_rows = []
@@ -42,6 +57,8 @@ def dwcaext2df(dwcafile, extensiontype="http://rs.gbif.org/terms/1.0/Description
                 if extension_line.rowtype == extensiontype:
                     # We use the header mapper to shorten the key names
                     extension_line_renamed = {header_mapper.get(key, key): value for key, value in extension_line.data.items()}
+                    # Remove HTML tags from the description column
+                    extension_line_renamed['description'] = strip_html(extension_line_renamed['description'])
                     # Add a coreid if its not there already
                     if not 'coreid' in extension_line_renamed.keys():
                         extension_line_renamed['coreid'] = row.id
@@ -49,6 +66,7 @@ def dwcaext2df(dwcafile, extensiontype="http://rs.gbif.org/terms/1.0/Description
 
         # Convert our list of dictionaries to a pandas dataframe
         df = pd.DataFrame(ext_rows)
+
         return df
 
 def main():
