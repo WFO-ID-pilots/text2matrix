@@ -1,0 +1,14 @@
+You are given a bullet point list of the characteristics of a plant species.
+
+Transcribe EVERY SINGLE characteristics mentioned in the list below into JSON and collect them into an array.
+Do not omit any characteristic mentioned in the list.
+Do not transcribe any characteristic that is not explicitly mentioned in the list.
+
+Each characteristic and its corresponding value must be formatted as follows:
+{"characteristic": (name of characteristic), "value": (value of characteristic)}
+(name of characteristic) should be substituted with the name of the characteristic.
+(value of characteristic) should be substituted with the corresponding value of the characteristic.
+If a characteristic relates to a particular organ, its corresponding name must be formatted as follows: (organ) (characteristic), where (organ) should be substituted with the name of the organ and (characteristic) should be sutstituted with the name of the characteristic without the name of the organ.
+The name of a characteristic should not contain any characters other than a-z and space, and must be in lowercase.
+
+List of characteristics:
