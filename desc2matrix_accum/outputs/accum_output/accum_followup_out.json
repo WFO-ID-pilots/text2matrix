@@ -1,0 +1,1633 @@
+{
+    "sys_prompt": "\nYou are a diligent robot assistant made by a botanist. You have expert knowledge of botanical terminology.\nYour goal is to transcribe the given botanical description(s) of plant characteristics into a valid JSON output.\nYour answer must be as complete and accurate as possible.\nYou must answer in valid JSON, with no other text.\n",
+    "tab_prompt": "\nYou are given a botanical description of a few plant species taken from published floras.\nYou extract the types of characteristics mentioned in the descriptions and their corresponding values, and transcribe them into JSON.\nYour answer should be an array of JSON with name of the characteristic, ID of species, and the corresponding values formatted as follows: {\"characteristic\":(name of characteristic), \"values\":{(ID of species 1): (value of characteristic for species 1), (ID of species 2): (value of characteristic for species 2), ...}.\n(name of characteristic) should be substituted with the name of the characteristic.\n(ID of species n) should be substituted with the ID of the nth species.\n(value of characteristic for species n) should be substituted with the corresponding characteristic value for the nth species.\nThe name of every characteristic must be written in lowercase.\nMake sure that you surround your final answer with square brackets [ and ] so that it is a valid array.\nDo not include any text (e.g. introductory text) other than the valid array of JSON.\n\nFollow the instructions below.\n\n1. Transcribe all the mentioned characteristics relating to the whole plant, such as growth form, reproduction, plant height, and branching.\n\n2. Iterate through every mentioned organs (e.g. leaf and other leaf-like organs, stem, flower, inflorescence, fruit, seed and root) and parts of organs (e.g. stipule, anther, ovary) and transcribe their corresponding characteristics.\nYou must transcribe the length, width, shape, color, surface texture, surface features, and arrangement of each organ or part of an organ.\nEach of these characteristics must be separate. The name of every characteristic relating to an organ or a part of an organ must be formatted as follows: \"(name of organ or part of organ) (type of characteristic)\", where (name of organ or part of organ) should be substituted with the name of the organ or part of the organ, and (type of characteristic) should be substituted with the specific type of characteristic.\n\n3. If a characteristic is mentioned for one species (e.g. species ID A) but not for another species (e.g. species ID B) you should put \"NA\" as the corresponding value for species ID B. \n\nIn the final output JSON, try to include all words that appear in the given descriptions, as long as they carry information about the plant species.\nDo not make up characteristics that are not mentioned in the descriptions.\n\nHere is an example of how you might transcribe species descriptions:\n\nDescription of species ID A: Perennial herb 10-30 cm tall. Fruits ovate, tomentose, yellow when ripe. Leaves alternate, glabrous, deep green.\nDescription of species ID B: Shrub 1-1.5 m tall. Friuts obovate, red when ripe. Leaves lanceolate, opposite, yellow-green.\nDescription of species ID C: Annual herb 10-12 cm tall. Fruits flattened, glabrous. Leaves alternate, with serrate margin, mid-green.\nJSON output:\n[\n    {\"characteristic\": \"life history\", \"values\": {\"A\": \"perennial\", \"B\": \"perennial\", \"C\": \"annual\"}},\n    {\"characteristic\": \"growth form\", \"values\": {\"A\": \"herb\", \"B\": \"shrub\", \"C\": \"herb\"}},\n    {\"characteristic\": \"plant height\", \"values\": {\"A\": \"10-30 cm\", \"B\": \"1-1.5 m\", \"C\": \"10-12 cm\"}},\n    {\"characteristic\": \"fruit shape\", \"values\": {\"A\": \"ovate\", \"B\": \"obovate\", \"C\": \"flattened\"}},\n    {\"characteristic\": \"fruit color\", \"values\": {\"A\": \"yellow when ripe\", \"B\": \"red when ripe\", \"C\": \"NA\"}},\n    {\"characteristic\": \"fruit surface texture\", \"values\": {\"A\": \"tomentose\", \"B\": \"NA\", \"C\": \"glabrous\"}},\n    {\"characteristic\": \"leaf arrangement\", \"values\": {\"A\": \"alternate\", \"B\": \"opposite\", \"C\": \"alternate\"}},\n    {\"characteristic\": \"leaf surface texture\", \"values\": {\"A\": \"glabrous\", \"B\": \"NA\", \"C\": \"NA\"}},\n    {\"characteristic\": \"leaf margin shape\", \"values\": {\"A\": \"NA\", \"B\": \"NA\", \"C\": \"serrate\"}},\n    {\"characteristic\": \"leaf shape\", \"values\": {\"A\": \"NA\", \"B\": \"lanceolate\", \"C\": \"NA\"}},\n    {\"characteristic\": \"leaf color\", \"values\": {\"A\": \"deep green\", \"B\": \"yellow-green\", \"C\": \"mid-green\"}},\n]\n\nHere are the descriptions that you should transcribe:\n\n[DESCRIPTIONS]\n",
+    "prompt": "\nYou are given a botanical description of a plant species taken from published floras.\nYou extract the types of characteristics mentioned in the description and their corresponding values, and transcribe them into JSON.\nYour answer should be an array of JSON with name of the characteristic and the corresponding value formatted as follows: {\"characteristic\":(name of characteristic), \"value\":(value of characteristic)}.\n(name of characteristic) should be substituted with the name of the characteristic, and (value of characteristic) should be substituted with the corresponding value.\nThe name of every characteristic must be written in lowercase.\nMake sure that you surround your final answer with square brackets [ and ] so that it is a valid array.\nDo not include any text (e.g. introductory text) other than the valid array of JSON.\n\nFollow the instructions below.\n\n1. Transcribe all the mentioned characteristics relating to the whole plant, such as growth form, reproduction, plant height, and branching.\n\n2. Iterate through every mentioned organs (e.g. leaf and other leaf-like organs, stem, flower, inflorescence, fruit, seed and root) and parts of organs (e.g. stipule, anther, ovary) and transcribe their corresponding characteristics.\nYou must transcribe the length, width, shape, color, surface texture, surface features, and arrangement of each organ or part of an organ.\nEach of these characteristics must be separate. The name of every characteristic relating to an organ or a part of an organ must be formatted as follows: \"(name of organ or part of organ) (type of characteristic)\", where (name of organ or part of organ) should be substituted with the name of the organ or part of the organ, and (type of characteristic) should be substituted with the specific type of characteristic.\n\nIn the final output JSON, try to include all words that appear in the given description, as long as they carry information about the plant species.\nDo not make up characteristics that are not mentioned in the description.\n\nHere are some examples of descriptions and their correponding transcription in JSON:\n\nSentence: \"Fruit: ovoid berry, 10-12 mm wide, 13-15 mm long, yellow to yellow-green throughout.\"\nJSON: {\"characteristic\": \"fruit shape\", \"value\": \"ovoid\"}, {\"characteristic\": \"fruit type\", \"value\": \"berry\"}, {\"characteristic\": \"fruit width\", \"value\": \"10-12 mm\"}, {\"characteristic\": \"fruit length\", \"value\": \"13-15 mm\"}, {\"characteristic\": \"fruit color\", \"value\": \"yellow to yellow-green\"}\n\nSentence: \"Perennial dioecious herbs 60-100cm tall. Leaves alternate, green and glabrous adaxially and hirsute with white to greyish hair abaxially.\"\nJSON: {\"characteristic\": \"life history\", \"value\": \"perennial\"}, {\"characteristic\": \"reproduction\", \"value\": \"dioecious\"}, {\"characteristic\": \"growth form\", \"value\": \"herb\"}, , {\"characteristic\": \"plant height\", \"value\": \"60-100 cm\"}, {\"characteristic\": \"leaf arrangement\", \"value\": \"alternate\"}, {\"characteristic\": \"leaf adaxial colour\", \"value\": \"green\"}, {\"characteristic\": \"leaf adaxial texture\", \"value\": \"glabrous\"}, {\"characteristic\": \"leaf abaxial texture\", \"value\": \"hirsute\"}, {\"characteristic\": \"leaf abaxial hair colour\", \"value\": \"white to greyish\"}\n\nInclude the following list of characteristics in your output. Use the name of the characteristic as given in this list. If you can't find one or more of these characteristics in the given description, put \"NA\" as the corresponding value. If you find a characteristic in the given description that is not in this list, add that characteristic in your response.\n\n[CHARACTER_LIST]\n\nHere is the description that you should transcribe:\n\n[DESCRIPTION]\n",
+    "f_prompt": "\nPlease generate a new, more complete JSON response in the same format as before.\n\nHere are the words in the original description that you've omitted in your JSON response:\n[MISSING_WORDS]\n\nSome of these are broken parts of words that you have included in your final response. For example, the list might have the word 'seudostipule' when you have 'pseudostipule' in your JSON. Ignore such cases.\nOf the words in the above list, try to include all words that contain information about a plant trait that you have genuinely omitted.\n\nDo not include any text (e.g. introductory text) other than the valid array of JSON.\n\nHere is the original description that you should transcribe:\n[DESCRIPTION]\n",
+    "initspnum": 3,
+    "params": {
+        "temperature": 0.1,
+        "seed": 1,
+        "repeat_last_n": 0,
+        "num_predict": 2048,
+        "num_ctx": 4096,
+        "top_k": null,
+        "top_p": null
+    },
+    "mode": "desc2json_accum_tab",
+    "charlist_len_history": [
+        14,
+        27,
+        35,
+        35,
+        42,
+        42,
+        45,
+        48,
+        48,
+        48,
+        48
+    ],
+    "charlist_history": [
+        [
+            "life history",
+            "growth form",
+            "plant height",
+            "stem diameter",
+            "leaf arrangement",
+            "leaf shape",
+            "leaf surface texture",
+            "pseudostipule length",
+            "inflorescence shape",
+            "fruit shape",
+            "fruit color",
+            "seed shape",
+            "seed color",
+            "seed mucilaginous property"
+        ],
+        [
+            "life history",
+            "growth form",
+            "plant height",
+            "stem diameter",
+            "leaf arrangement",
+            "leaf shape",
+            "leaf surface texture",
+            "pseudostipule length",
+            "inflorescence shape",
+            "fruit shape",
+            "fruit color",
+            "seed shape",
+            "seed color",
+            "seed mucilaginous property",
+            "leaflet length",
+            "leaflet width",
+            "petiole length",
+            "peduncle length",
+            "pedicel length",
+            "pedicel spacing",
+            "filament length",
+            "anther length",
+            "style length",
+            "stigma shape",
+            "seed size",
+            "seed color in fresh condition",
+            "seed color when drying"
+        ],
+        [
+            "life history",
+            "growth form",
+            "plant height",
+            "stem diameter",
+            "leaf arrangement",
+            "leaf shape",
+            "leaf surface texture",
+            "pseudostipule length",
+            "inflorescence shape",
+            "fruit shape",
+            "fruit color",
+            "seed shape",
+            "seed color in fresh condition",
+            "seed color when drying",
+            "seed mucilaginous property",
+            "leaflet pair size",
+            "leaflet pair size decrease",
+            "terminal leaflet size",
+            "interjected leaflet number",
+            "interjected leaflet shape",
+            "petiole length",
+            "peduncle length",
+            "pedicel length",
+            "pedicel spacing",
+            "flower number",
+            "flower type",
+            "corolla shape",
+            "corolla color",
+            "stamen filament length",
+            "anther shape",
+            "anther color",
+            "style length",
+            "stigma shape",
+            "fruit width",
+            "fruit length"
+        ],
+        [
+            "life history",
+            "growth form",
+            "plant height",
+            "stem diameter",
+            "leaf arrangement",
+            "leaf shape",
+            "leaf surface texture",
+            "pseudostipule length",
+            "inflorescence shape",
+            "fruit shape",
+            "fruit color",
+            "seed shape",
+            "seed color in fresh condition",
+            "seed color when drying",
+            "seed mucilaginous property",
+            "leaflet pair size",
+            "leaflet pair size decrease",
+            "terminal leaflet size",
+            "interjected leaflet number",
+            "interjected leaflet shape",
+            "petiole length",
+            "peduncle length",
+            "pedicel length",
+            "pedicel spacing",
+            "flower number",
+            "flower type",
+            "corolla shape",
+            "corolla color",
+            "stamen filament length",
+            "anther shape",
+            "anther color",
+            "style length",
+            "stigma shape",
+            "fruit width",
+            "fruit length"
+        ],
+        [
+            "life history",
+            "growth form",
+            "plant height",
+            "stem diameter",
+            "sympodial unit foliation",
+            "pseudostipule length",
+            "pseudostipule shape",
+            "leaf arrangement",
+            "leaf shape",
+            "leaf surface texture",
+            "petiole length",
+            "lateral leaflet pair size",
+            "lateral leaflet pair size decrease",
+            "terminal leaflet size",
+            "terminal leaflet shape",
+            "terminal leaflet apex",
+            "terminal leaflet base",
+            "interjected leaflet number",
+            "inflorescence shape",
+            "inflorescence forked",
+            "inflorescence location",
+            "flower number",
+            "flower type",
+            "peduncle length",
+            "pedicel length",
+            "pedicel articulation",
+            "calyx length",
+            "corolla shape",
+            "corolla edges",
+            "corolla color",
+            "anther length",
+            "anther shape",
+            "anther color",
+            "anther dehiscence",
+            "filament length",
+            "ovary style length",
+            "ovary style shape",
+            "fruit shape",
+            "fruit color",
+            "seed shape",
+            "seed color",
+            "seed mucilaginous property"
+        ],
+        [
+            "life history",
+            "growth form",
+            "plant height",
+            "stem diameter",
+            "sympodial unit foliation",
+            "pseudostipule length",
+            "pseudostipule shape",
+            "leaf arrangement",
+            "leaf shape",
+            "leaf surface texture",
+            "petiole length",
+            "lateral leaflet pair size",
+            "lateral leaflet pair size decrease",
+            "terminal leaflet size",
+            "terminal leaflet shape",
+            "terminal leaflet apex",
+            "terminal leaflet base",
+            "interjected leaflet number",
+            "inflorescence shape",
+            "inflorescence forked",
+            "inflorescence location",
+            "flower number",
+            "flower type",
+            "peduncle length",
+            "pedicel length",
+            "pedicel articulation",
+            "calyx length",
+            "corolla shape",
+            "corolla edges",
+            "corolla color",
+            "anther length",
+            "anther shape",
+            "anther color",
+            "anther dehiscence",
+            "filament length",
+            "ovary style length",
+            "ovary style shape",
+            "fruit shape",
+            "fruit color",
+            "seed shape",
+            "seed color",
+            "seed mucilaginous property"
+        ],
+        [
+            "life history",
+            "growth form",
+            "plant height",
+            "stem diameter",
+            "sympodial unit foliation",
+            "pseudostipule length",
+            "pseudostipule shape",
+            "leaf arrangement",
+            "leaf shape",
+            "leaf surface texture",
+            "petiole length",
+            "lateral leaflet pair size",
+            "terminal leaflet size",
+            "terminal leaflet shape",
+            "terminal leaflet apex",
+            "terminal leaflet base",
+            "terminal leaflet attachment",
+            "interjected leaflet number",
+            "inflorescence shape",
+            "inflorescence forked",
+            "inflorescence location",
+            "flower number",
+            "flower type",
+            "peduncle length",
+            "pedicel length",
+            "pedicel articulation",
+            "calyx length",
+            "corolla shape",
+            "corolla edges",
+            "corolla color",
+            "anther length",
+            "anther shape",
+            "anther color",
+            "anther dehiscence",
+            "filament length",
+            "ovary style length",
+            "ovary style shape",
+            "fruit shape",
+            "fruit color",
+            "seed shape",
+            "seed color",
+            "seed mucilaginous property",
+            "seed digestion",
+            "seed removal",
+            "seed living specimen"
+        ],
+        [
+            "life history",
+            "growth form",
+            "plant height",
+            "stem diameter",
+            "sympodial unit foliation",
+            "pseudostipule length",
+            "pseudostipule shape",
+            "leaf arrangement",
+            "leaf shape",
+            "leaf surface texture",
+            "petiole length",
+            "lateral leaflet pair size",
+            "lateral leaflet pair shape",
+            "lateral leaflet pair apex",
+            "lateral leaflet pair base",
+            "lateral leaflet pair attachment",
+            "lateral leaflet pair decurrence",
+            "terminal leaflet size",
+            "terminal leaflet shape",
+            "terminal leaflet apex",
+            "terminal leaflet base",
+            "interjected leaflet number",
+            "inflorescence shape",
+            "inflorescence forkedness",
+            "inflorescence location",
+            "flower number",
+            "flower type",
+            "peduncle length",
+            "pedicel length",
+            "pedicel articulation",
+            "calyx length",
+            "calyx lobe shape",
+            "calyx lobe apex",
+            "corolla diameter",
+            "corolla shape",
+            "corolla edge",
+            "corolla color",
+            "anther length",
+            "anther shape",
+            "anther color",
+            "anther dehiscence",
+            "filament length",
+            "ovary style length",
+            "ovary style shape",
+            "ovary stigma shape",
+            "fruit shape",
+            "seed shape",
+            "seed color"
+        ],
+        [
+            "life history",
+            "growth form",
+            "plant height",
+            "stem diameter",
+            "sympodial unit foliation",
+            "pseudostipule length",
+            "pseudostipule shape",
+            "leaf arrangement",
+            "leaf shape",
+            "leaf surface texture",
+            "petiole length",
+            "lateral leaflet pair size",
+            "lateral leaflet pair shape",
+            "lateral leaflet pair apex",
+            "lateral leaflet pair base",
+            "lateral leaflet pair attachment",
+            "lateral leaflet pair decurrence",
+            "terminal leaflet size",
+            "terminal leaflet shape",
+            "terminal leaflet apex",
+            "terminal leaflet base",
+            "interjected leaflet number",
+            "inflorescence shape",
+            "inflorescence forkedness",
+            "inflorescence location",
+            "flower number",
+            "flower type",
+            "peduncle length",
+            "pedicel length",
+            "pedicel articulation",
+            "calyx length",
+            "calyx lobe shape",
+            "calyx lobe apex",
+            "corolla diameter",
+            "corolla shape",
+            "corolla edge",
+            "corolla color",
+            "anther length",
+            "anther shape",
+            "anther color",
+            "anther dehiscence",
+            "filament length",
+            "ovary style length",
+            "ovary style shape",
+            "ovary stigma shape",
+            "fruit shape",
+            "seed shape",
+            "seed color"
+        ],
+        [
+            "life history",
+            "growth form",
+            "plant height",
+            "stem diameter",
+            "sympodial unit foliation",
+            "pseudostipule length",
+            "pseudostipule shape",
+            "leaf arrangement",
+            "leaf shape",
+            "leaf surface texture",
+            "petiole length",
+            "lateral leaflet pair size",
+            "lateral leaflet pair shape",
+            "lateral leaflet pair apex",
+            "lateral leaflet pair base",
+            "lateral leaflet pair attachment",
+            "lateral leaflet pair decurrence",
+            "terminal leaflet size",
+            "terminal leaflet shape",
+            "terminal leaflet apex",
+            "terminal leaflet base",
+            "interjected leaflet number",
+            "inflorescence shape",
+            "inflorescence forkedness",
+            "inflorescence location",
+            "flower number",
+            "flower type",
+            "peduncle length",
+            "pedicel length",
+            "pedicel articulation",
+            "calyx length",
+            "calyx lobe shape",
+            "calyx lobe apex",
+            "corolla diameter",
+            "corolla shape",
+            "corolla edge",
+            "corolla color",
+            "anther length",
+            "anther shape",
+            "anther color",
+            "anther dehiscence",
+            "filament length",
+            "ovary style length",
+            "ovary style shape",
+            "ovary stigma shape",
+            "fruit shape",
+            "seed shape",
+            "seed color"
+        ],
+        [
+            "life history",
+            "growth form",
+            "plant height",
+            "stem diameter",
+            "sympodial unit foliation",
+            "pseudostipule length",
+            "pseudostipule shape",
+            "leaf arrangement",
+            "leaf shape",
+            "leaf surface texture",
+            "petiole length",
+            "lateral leaflet pair size",
+            "lateral leaflet pair shape",
+            "lateral leaflet pair apex",
+            "lateral leaflet pair base",
+            "lateral leaflet pair attachment",
+            "lateral leaflet pair decurrence",
+            "terminal leaflet size",
+            "terminal leaflet shape",
+            "terminal leaflet apex",
+            "terminal leaflet base",
+            "interjected leaflet number",
+            "inflorescence shape",
+            "inflorescence forkedness",
+            "inflorescence location",
+            "flower number",
+            "flower type",
+            "peduncle length",
+            "pedicel length",
+            "pedicel articulation",
+            "calyx length",
+            "calyx lobe shape",
+            "calyx lobe apex",
+            "corolla diameter",
+            "corolla shape",
+            "corolla edge",
+            "corolla color",
+            "anther length",
+            "anther shape",
+            "anther color",
+            "anther dehiscence",
+            "filament length",
+            "ovary style length",
+            "ovary style shape",
+            "ovary stigma shape",
+            "fruit shape",
+            "seed shape",
+            "seed color"
+        ]
+    ],
+    "data": [
+        {
+            "coreid": "wfo-0001025636",
+            "status": "success",
+            "original_description": "Herbs 0.1-0.3 m tall, rosette-forming to semierect. Stems 2-4 mm in diameter at base of plant, green, unwinged, subglabrous to moderately pubescent with short multicellular hairs; tubers typically orne singly at the end of each stolon.Sympodial units tri- to plurifoliate, not geminate.Leaves odd-pinnate, the blades 9.5-29.5 x 1.7-9.2 cm, green, membranous to chartaceous, subglabrous to moderately pubescent adaxially and abaxially with hairs like those of the stems; lateral leaflet pairs 3-6, subequal except for the most proximal 1 or 2 pairs that are greatly reduced in size to unequal with the uppermost pairs clearly larger; most distal lateral leaflets 1.1-6.1 x 0.6-2.8 cm, broadly ovate to broadly elliptic, the apex acute to obtuse, the base typically oblique to cuneate, sessile and broadly decurrent to petiolulate with the petiolules up to 2 mm long; terminal leaflet 2.6-8.3 x 1.7-5.2 cm, orbicular to very broadly obovate, the apex rounded to obtuse, the base truncate to cuneate; interjected leaflets 0-5, sessile to short petiolulate, ovate to orbicular; petioles 1-5.5 cm, subglabrous to moderately pubescent with hairs like the stems. Pseudostipules absent to minute and scale-like to 1 mm long, pubescent with hairs like those of the stem.Inflorescences 1-3.5 cm, often near the base of the plant but sometimes in the distal half of the plant, generally unforked, with 1-5 flowers, with all flowers apparently perfect, the axes pubescent with hairs like those of the stem; peduncle highly contracted, sessile to 0.1 cm long, but sometimes longer to 1.8 cm long; pedicels 10-45 mm long in flower and fruit, spaced 1-10 mm apart, articulated high in the distal half.Flowers homostylous, 5-merous. Calyx 3-5 mm long, the tube 1-2 mm, the lobes 1-4 mm, acute to acuminate, the acumens 1-3 mm long, pubescent with hairs like those of the stem. Corolla 1.4-3.5 cm in diameter, rotate to rotate-pentagonal, blue adaxially and abaxially, the tube 1-2 mm long, the acumens 0-2 mm long, the corolla edges flat, not folded dorsally, glabrous abaxially, minutely puberulent adaxially, especially along the midribs, ciliate at the margins, especially at the tips of the corollas. Stamens with the filaments 1-2 mm long; anthers 2.5-6 mm long, lanceolate, connivent, yellow, poricidal at the tips, the pores lengthening to slits with age. Ovary glabrous; style 6.5-10 mm x ca. 1 mm, exceeding stamens by 2-4 mm, straight, glabrous; stigma clavate to capitate.Fruit a globose to slightly ovoid berry, 1-2 cm wide, 1-2.2 cm long, green to green and purple mottled when ripe, glabrous.Seeds from living specimens ovoid and ca. 2 mm long, whitish to greenish in fresh condition and drying brownish, with a thick covering of \u201chair-like\u201d lateral walls of the testal cells that make the seeds mucilaginous when wet, green-white throughout; testal cells honeycomb-shaped when lateral walls removed by enzyme digestion.",
+            "char_json": [
+                {
+                    "characteristic": "life history",
+                    "value": "herb"
+                },
+                {
+                    "characteristic": "growth form",
+                    "value": "rosette-forming to semierect"
+                },
+                {
+                    "characteristic": "plant height",
+                    "value": "0.1-0.3 m"
+                },
+                {
+                    "characteristic": "stem diameter",
+                    "value": "2-4 mm"
+                },
+                {
+                    "characteristic": "leaf arrangement",
+                    "value": "odd-pinnate"
+                },
+                {
+                    "characteristic": "leaf shape",
+                    "value": "broadly ovate to broadly elliptic"
+                },
+                {
+                    "characteristic": "leaf surface texture",
+                    "value": "membranous to chartaceous"
+                },
+                {
+                    "characteristic": "pseudostipule length",
+                    "value": "absent to minute and scale-like to 1 mm long"
+                },
+                {
+                    "characteristic": "inflorescence shape",
+                    "value": "unforked"
+                },
+                {
+                    "characteristic": "fruit shape",
+                    "value": "globose to slightly ovoid"
+                },
+                {
+                    "characteristic": "fruit color",
+                    "value": "green to green and purple mottled when ripe"
+                },
+                {
+                    "characteristic": "seed shape",
+                    "value": "ovoid"
+                },
+                {
+                    "characteristic": "seed color",
+                    "value": "whitish to greenish in fresh condition and drying brownish"
+                },
+                {
+                    "characteristic": "seed mucilaginous property",
+                    "value": "yes"
+                },
+                {
+                    "characteristic": "leaflet length",
+                    "value": "1.1-6.1 cm"
+                },
+                {
+                    "characteristic": "leaflet width",
+                    "value": "0.6-2.8 cm"
+                },
+                {
+                    "characteristic": "petiole length",
+                    "value": "1-5.5 cm"
+                },
+                {
+                    "characteristic": "peduncle length",
+                    "value": "0.1-1.8 cm"
+                },
+                {
+                    "characteristic": "pedicel length",
+                    "value": "10-45 mm"
+                },
+                {
+                    "characteristic": "pedicel spacing",
+                    "value": "1-10 mm"
+                },
+                {
+                    "characteristic": "filament length",
+                    "value": "1-2 mm"
+                },
+                {
+                    "characteristic": "anther length",
+                    "value": "2.5-6 mm"
+                },
+                {
+                    "characteristic": "style length",
+                    "value": "6.5-10 mm"
+                },
+                {
+                    "characteristic": "stigma shape",
+                    "value": "clavate to capitate"
+                },
+                {
+                    "characteristic": "seed size",
+                    "value": "ca. 2 mm long"
+                },
+                {
+                    "characteristic": "seed color in fresh condition",
+                    "value": "whitish to greenish"
+                },
+                {
+                    "characteristic": "seed color when drying",
+                    "value": "brownish"
+                }
+            ],
+            "failed_str": null
+        },
+        {
+            "coreid": "wfo-0001025637",
+            "status": "success",
+            "original_description": "Herbs 0.2-0.9 m tall, erect. Stems 2-7 mm in diameter at base of plant, green to green mottled with purple, usually unwinged, glabrous; tubers typically moniliform (multiple tubers arranged along the stolon like beads on a necklace).Sympodial units tri- to plurifoliate, not geminate.Leaves odd-pinnate, the blades 3-9 x 1.5-5 cm, dark green adaxially, light green abaxially, coriaceous, glabrous to glabrescent adaxially with white short hairs, glabrous abaxially; lateral leaflet pairs 4-6, decreasing in size toward the leaf base, with the terminal leaflet subequal to the laterals; most distal lateral leaflets 0.8-2.6 x 0.2-0.5 cm, elliptic, the apex acute to acuminate, the base typically petiolulate and attenuate to rounded, symmetric, sometimes with secondary interjected leaflets in the petiolule; terminal leaflet 1.2-3.5 x 0.3-0.5 cm, elliptic, the apex acute to acuminate, the base cuneate; interjected leaflets 0-27, usually decurrent onto the rachis, lanceolate; petioles 0-0.3 cm, glabrous. Pseudostipules 3-4 mm long, glabrous.Inflorescences 2.5-8 cm, terminal with a subtending axillary bud, generally in distal half of the plant, forked, with 2-20 flowers, with all flowers apparently perfect, the axes glabrous; peduncle 1-12 cm long; pedicels 14-38 mm long in flower and fruit, spaced 3-5 mm apart, articulated high in the distal half.Flowers homostylous, 5-merous. Calyx 3-5 mm long, the tube 1-2 mm, the lobes 1-2 mm, usually ovate, with linear acumens 1-2 mm long, glabrous. Corolla 2.8-4.2 cm in diameter, pentagonal to rotate, lilac to blue, the tube 1-2 mm long, the acumens 2-3 mm long, the corolla edges flat, not folded dorsally, glabrous abaxially and adaxially. Stamens with the filaments 1-2 mm long; anthers 5-7 mm long, lanceolate, connivent, yellow, poricidal at the tips, the pores lengthening to slits with age. Ovary glabrous; style 3-10 mm x ca. 1 mm, exceeding stamens by 1-5 mm, straight, glabrous; stigma clavate to capitate.Fruit a globose to ovoid berry, 1-2.5 cm wide, 1.6-2.5 mm long, medium to deep green with dark green stripes or tiny white dots when ripe, glabrous.Seeds from living specimens ovoid and ca. 2 mm long, whitish to greenish in fresh condition and drying brownish, with a thick covering of \u201chair-like\u201d lateral walls of the testal cells that make the seeds mucilaginous when wet, green-white throughout; testal cells honeycomb-shaped when lateral walls removed by enzyme digestion.",
+            "char_json": [
+                {
+                    "characteristic": "life history",
+                    "value": "herb"
+                },
+                {
+                    "characteristic": "growth form",
+                    "value": "herb"
+                },
+                {
+                    "characteristic": "plant height",
+                    "value": "0.2-0.9 m"
+                },
+                {
+                    "characteristic": "stem diameter",
+                    "value": "2-7 mm"
+                },
+                {
+                    "characteristic": "leaf arrangement",
+                    "value": "odd-pinnate"
+                },
+                {
+                    "characteristic": "leaf shape",
+                    "value": "elliptic"
+                },
+                {
+                    "characteristic": "leaf surface texture",
+                    "value": "coriaceous, glabrous to glabrescent"
+                },
+                {
+                    "characteristic": "pseudostipule length",
+                    "value": "3-4 mm"
+                },
+                {
+                    "characteristic": "inflorescence shape",
+                    "value": "forked"
+                },
+                {
+                    "characteristic": "fruit shape",
+                    "value": "globose to ovoid"
+                },
+                {
+                    "characteristic": "fruit color",
+                    "value": "medium to deep green with dark green stripes or tiny white dots"
+                },
+                {
+                    "characteristic": "seed shape",
+                    "value": "ovoid"
+                },
+                {
+                    "characteristic": "seed color in fresh condition",
+                    "value": "whitish to greenish"
+                },
+                {
+                    "characteristic": "seed color when drying",
+                    "value": "brownish"
+                },
+                {
+                    "characteristic": "seed mucilaginous property",
+                    "value": "yes"
+                },
+                {
+                    "characteristic": "leaflet pair size",
+                    "value": "4-6"
+                },
+                {
+                    "characteristic": "leaflet pair size decrease",
+                    "value": "toward the leaf base"
+                },
+                {
+                    "characteristic": "terminal leaflet size",
+                    "value": "1.2-3.5 x 0.3-0.5 cm"
+                },
+                {
+                    "characteristic": "interjected leaflet number",
+                    "value": "0-27"
+                },
+                {
+                    "characteristic": "interjected leaflet shape",
+                    "value": "lanceolate"
+                },
+                {
+                    "characteristic": "petiole length",
+                    "value": "0-0.3 cm"
+                },
+                {
+                    "characteristic": "peduncle length",
+                    "value": "1-12 cm"
+                },
+                {
+                    "characteristic": "pedicel length",
+                    "value": "14-38 mm"
+                },
+                {
+                    "characteristic": "pedicel spacing",
+                    "value": "3-5 mm apart"
+                },
+                {
+                    "characteristic": "flower number",
+                    "value": "2-20"
+                },
+                {
+                    "characteristic": "flower type",
+                    "value": "perfect"
+                },
+                {
+                    "characteristic": "corolla shape",
+                    "value": "pentagonal to rotate"
+                },
+                {
+                    "characteristic": "corolla color",
+                    "value": "lilac to blue"
+                },
+                {
+                    "characteristic": "stamen filament length",
+                    "value": "1-2 mm"
+                },
+                {
+                    "characteristic": "anther shape",
+                    "value": "lanceolate"
+                },
+                {
+                    "characteristic": "anther color",
+                    "value": "yellow"
+                },
+                {
+                    "characteristic": "style length",
+                    "value": "3-10 mm"
+                },
+                {
+                    "characteristic": "stigma shape",
+                    "value": "clavate to capitate"
+                },
+                {
+                    "characteristic": "fruit width",
+                    "value": "1-2.5 cm"
+                },
+                {
+                    "characteristic": "fruit length",
+                    "value": "1.6-2.5 mm"
+                }
+            ],
+            "failed_str": null
+        },
+        {
+            "coreid": "wfo-0001025639",
+            "status": "success",
+            "original_description": "Herbaceous tuber-bearing perennials 1-2 m tall. Stems 3-6 mm in diameter at base of plant.Sympodial units typically 3-6-foliate.Pseudostipules 5-10 mm long, lunate. Leaves odd-pinnate, 10-21 cm long, 6-12 cm wide, puberulent to pubescent adaxially and abaxially; petioles 1-3 cm long; lateral leaflet pairs 3-5, the size of the lateral leaflets diminishing gradually towards the base of the leaf; most distal lateral leaflets 3.5-7 cm long, 2-3.5 cm wide, ovate to broadly elliptic to obovate, apex acute to acuminate, base oblique, cuneate top truncate, sometimes with interjected leaflets on the petiolules; terminal leaflet 4.5-8.5 cm long, 2-3.5 cm wide, broadly elliptical to obovate, apex acute to acuminate, base cuneate, frequently with interjected leaflets on the petiolule; interjected leaflets 5-15.Inflorescence a dichasially branched, ebracteate, monochasial or dichasial cyme, 2-3 forked, generally in the distal half of the plant, with 8-12 flowers, all flowers perfect, peduncle 4-10 cm long; pedicels 20-35 mm long, articulate between the proximal \u00bc and the distal \u00bc.Flowers with the calyx 5-8 mm long, lobes acute to long-attenuate, acumens 2-3 mm long. Corollas 2.8-3.2 cm in diameter, rotate, acumens 3-4 mm long, edges of corolla flat, not folded dorsally, white to dark violet above and below. Anthers 6-8 mm long, connate, yellow, apically poricidally dehiscent and often maturing to a short introrse apical slit, filaments 1-4 mm long. Ovary with style 8-9 mm long, exceeding stamens by 1-3 mm, straight, with stigma globose.Fruits 1-2 cm in diameter, globose, medium green throughout.Seeds generally not present, but the rare seeds produced are green-white throughout, ovoid, ca. 2 mm long, with a thick covering of \u201chair-like\u201d lateral walls of the testal cells that make the seeds mucilaginous when wet. Removal of these hair-like lateral walls by enzyme digestion reveals a honeycomb pattern at their base.",
+            "char_json": [
+                {
+                    "characteristic": "life history",
+                    "value": "perennial"
+                },
+                {
+                    "characteristic": "growth form",
+                    "value": "herbaceous"
+                },
+                {
+                    "characteristic": "plant height",
+                    "value": "1-2 m"
+                },
+                {
+                    "characteristic": "stem diameter",
+                    "value": "3-6 mm"
+                },
+                {
+                    "characteristic": "leaf arrangement",
+                    "value": "odd-pinnate"
+                },
+                {
+                    "characteristic": "leaf shape",
+                    "value": "ovate to broadly elliptic to obovate"
+                },
+                {
+                    "characteristic": "leaf surface texture",
+                    "value": "puberulent to pubescent"
+                },
+                {
+                    "characteristic": "pseudostipule length",
+                    "value": "5-10 mm"
+                },
+                {
+                    "characteristic": "pseudostipule shape",
+                    "value": "lunate"
+                },
+                {
+                    "characteristic": "leaflet size",
+                    "value": "3-5"
+                },
+                {
+                    "characteristic": "leaflet shape",
+                    "value": "ovate to broadly elliptic to obovate"
+                },
+                {
+                    "characteristic": "leaflet surface texture",
+                    "value": "puberulent to pubescent"
+                },
+                {
+                    "characteristic": "petiole length",
+                    "value": "1-3 cm"
+                },
+                {
+                    "characteristic": "inflorescence shape",
+                    "value": "dichasially branched, ebracteate, monochasial or dichasial cyme"
+                },
+                {
+                    "characteristic": "flower number",
+                    "value": "8-12"
+                },
+                {
+                    "characteristic": "flower type",
+                    "value": "perfect"
+                },
+                {
+                    "characteristic": "peduncle length",
+                    "value": "4-10 cm"
+                },
+                {
+                    "characteristic": "pedicel length",
+                    "value": "20-35 mm"
+                },
+                {
+                    "characteristic": "calyx length",
+                    "value": "5-8 mm"
+                },
+                {
+                    "characteristic": "corolla diameter",
+                    "value": "2.8-3.2 cm"
+                },
+                {
+                    "characteristic": "corolla shape",
+                    "value": "rotate"
+                },
+                {
+                    "characteristic": "anther length",
+                    "value": "6-8 mm"
+                },
+                {
+                    "characteristic": "anther color",
+                    "value": "yellow"
+                },
+                {
+                    "characteristic": "ovary shape",
+                    "value": "globose"
+                },
+                {
+                    "characteristic": "fruit shape",
+                    "value": "globose"
+                },
+                {
+                    "characteristic": "fruit color",
+                    "value": "medium green"
+                },
+                {
+                    "characteristic": "seed shape",
+                    "value": "ovoid"
+                },
+                {
+                    "characteristic": "seed color",
+                    "value": "green-white"
+                },
+                {
+                    "characteristic": "seed mucilaginous property",
+                    "value": "yes"
+                }
+            ],
+            "failed_str": null
+        },
+        {
+            "coreid": "wfo-0001025642",
+            "status": "success",
+            "original_description": "Herbaceous tuber-bearing perennials 0.3-0.4 m tall. Stems 3-5 mm in diameter at base of plant.Sympodial units typically 3-6-foliate.Pseudostipules to 8-13 mm long, lunate or lanceolate. Leaves odd-pinnate, 7-11.5 cm long, 4.5-8 cm wide, puberulent adaxially and abaxially; petioles 1-2.7 cm long; lateral leaflet pairs 2-3, the size of the lateral leaflets gradually diminishing gradually towards the base of the leaf; most distal lateral leaflets 3.5-6 cm long, 1-2.5 cm wide, elliptic to elliptic-lanceolate, apex obtuse, acute to acuminate, base oblique, sessile; terminal leaflet 4-7.5 cm long, 1-2 cm wide, lanceolate, apex acute, base attenuate; interjected leaflets absent.Inflorescence a dichasially branched, ebracteate, monochasial or dichasial cyme, 2-3 forked, generally in the distal half of the plant, with 2-10 flowers, all flowers perfect, peduncle 1-3.2 cm long; pedicels 10-20 mm long, articulate between the proximal \u00bc and the distal \u00bc.Flowers with the calyx 5.5-7 mm long, lobes elliptic, apiculate, acumens 1-3 mm long. Corollas 1.5-2.5 cm in diameter, stellate, without acumens, edges of corolla flat, not folded dorsally, white. Anthers 5-6 mm long, connate, yellow, apically poricidally dehiscent and often maturing to a short introrse apical slit, filaments 1-4 mm long. Ovary with style 9-12 mm long, exceeding stamens by 3 mm, straight, with stigma globose.Fruits 1 cm in diameter, globose, green throughout.Seeds from living specimens often absent, if present green-white throughout, ovoid, ca. 2 mm long, with a thick covering of \u201chair-like\u201d lateral walls of the testal cells that make the seeds mucilaginous when wet. Removal of these hair-like lateral walls by enzyme digestion reveals a honeycomb pattern at their base.",
+            "char_json": [
+                {
+                    "characteristic": "life history",
+                    "value": "perennial"
+                },
+                {
+                    "characteristic": "growth form",
+                    "value": "herbaceous"
+                },
+                {
+                    "characteristic": "plant height",
+                    "value": "0.3-0.4 m"
+                },
+                {
+                    "characteristic": "stem diameter",
+                    "value": "3-5 mm"
+                },
+                {
+                    "characteristic": "sympodial unit foliation",
+                    "value": "3-6-foliate"
+                },
+                {
+                    "characteristic": "pseudostipule length",
+                    "value": "8-13 mm"
+                },
+                {
+                    "characteristic": "pseudostipule shape",
+                    "value": "lunate or lanceolate"
+                },
+                {
+                    "characteristic": "leaf arrangement",
+                    "value": "odd-pinnate"
+                },
+                {
+                    "characteristic": "leaf shape",
+                    "value": "elliptic to elliptic-lanceolate"
+                },
+                {
+                    "characteristic": "leaf surface texture",
+                    "value": "puberulent"
+                },
+                {
+                    "characteristic": "petiole length",
+                    "value": "1-2.7 cm"
+                },
+                {
+                    "characteristic": "lateral leaflet pair size",
+                    "value": "2-3"
+                },
+                {
+                    "characteristic": "lateral leaflet pair size decrease",
+                    "value": "gradually"
+                },
+                {
+                    "characteristic": "terminal leaflet size",
+                    "value": "4-7.5 cm"
+                },
+                {
+                    "characteristic": "terminal leaflet shape",
+                    "value": "lanceolate"
+                },
+                {
+                    "characteristic": "terminal leaflet apex",
+                    "value": "acute"
+                },
+                {
+                    "characteristic": "terminal leaflet base",
+                    "value": "attenuate"
+                },
+                {
+                    "characteristic": "interjected leaflet number",
+                    "value": "absent"
+                },
+                {
+                    "characteristic": "inflorescence shape",
+                    "value": "dichasially branched, ebracteate, monochasial or dichasial cyme"
+                },
+                {
+                    "characteristic": "inflorescence forked",
+                    "value": "2-3"
+                },
+                {
+                    "characteristic": "inflorescence location",
+                    "value": "distal half"
+                },
+                {
+                    "characteristic": "flower number",
+                    "value": "2-10"
+                },
+                {
+                    "characteristic": "flower type",
+                    "value": "perfect"
+                },
+                {
+                    "characteristic": "peduncle length",
+                    "value": "1-3.2 cm"
+                },
+                {
+                    "characteristic": "pedicel length",
+                    "value": "10-20 mm"
+                },
+                {
+                    "characteristic": "pedicel articulation",
+                    "value": "between the proximal \u00bc and the distal \u00bc"
+                },
+                {
+                    "characteristic": "calyx length",
+                    "value": "5.5-7 mm"
+                },
+                {
+                    "characteristic": "corolla shape",
+                    "value": "stellate"
+                },
+                {
+                    "characteristic": "corolla edges",
+                    "value": "flat"
+                },
+                {
+                    "characteristic": "corolla color",
+                    "value": "white"
+                },
+                {
+                    "characteristic": "anther length",
+                    "value": "5-6 mm"
+                },
+                {
+                    "characteristic": "anther shape",
+                    "value": "connate"
+                },
+                {
+                    "characteristic": "anther color",
+                    "value": "yellow"
+                },
+                {
+                    "characteristic": "anther dehiscence",
+                    "value": "apically poricidally dehiscent"
+                },
+                {
+                    "characteristic": "filament length",
+                    "value": "1-4 mm"
+                },
+                {
+                    "characteristic": "ovary style length",
+                    "value": "9-12 mm"
+                },
+                {
+                    "characteristic": "ovary style shape",
+                    "value": "straight"
+                },
+                {
+                    "characteristic": "fruit shape",
+                    "value": "globose"
+                },
+                {
+                    "characteristic": "fruit color",
+                    "value": "green throughout"
+                },
+                {
+                    "characteristic": "seed shape",
+                    "value": "ovoid"
+                },
+                {
+                    "characteristic": "seed color",
+                    "value": "green-white throughout"
+                },
+                {
+                    "characteristic": "seed mucilaginous property",
+                    "value": "yes"
+                }
+            ],
+            "failed_str": null
+        },
+        {
+            "coreid": "wfo-0001025644",
+            "status": "success",
+            "original_description": "Herbs 25-50 cm tall, erect. Stems 3-5 mm in diameter at base of plant, green to green and purple mottled, winged with wings up to 2 mm, invested with short uniseriate to multicellular non-glandular trichomes; tubers typically placed one at the end of each stolon.Sympodial units tri- to plurifoliate, not geminate.Leaves odd-pinnate, the blades 12-28 x 2.5-11 cm, green, membranous to chartaceous, pubescent adaxially and abaxially with hairs like those of the stems, usually finely ciliate and denticulate at the margins; lateral leaflet pairs 2-4, often subequal except for the most proximal pair that is greatly reduced in size; most distal lateral leaflets 4.5-9.5 x 2.4-4 cm, elliptic to broadly ovate, the apex acute to acuminate, the base typically oblique; terminal leaflet 6.5-13 x 3.3-8.2 cm, very broadly ovate to broadly elliptic to almost rounded, the apex acute to acuminate, the base shallowly cordate to truncate to cuneate; interjected leaflets 0-5, petiolules up to 10 mm long or more rarely sessile, ovate to orbicular; petioles 2.5-6 cm. Pseudostipules absent or up to 10 mm long, pubescent with hairs like those of the stem.Inflorescences 3-10 cm, terminal with a subtending axillary bud, generally in distal half of the plant, usually forked, with 13-21 flowers, with all flowers apparently perfect, the axes pubescent with hairs like those of the stem; peduncle 4-19 cm long; pedicels 1.3-2.1 mm long in flower and fruit, spaced 1-10 mm apart, articulated at about the middle.Flowers homostylous, 5-merous. Calyx 6-7 mm long, the tube 1-2 mm, the lobes 4-6 mm, long attenuate, the acumens ca. 2.3 mm long, with hairs like those of the stem. Corolla 2-3 cm in diameter, pentagonal, white to white tinged with blue adaxially and abaxially, the tube 1-2 mm long, the acumens ca. 1.3 mm long, the corolla edges flat, not folded dorsally, glabrous adaxially, minutely puberulent abaxially, especially along the midribs, ciliate at the margins, especially at the tips of the corollas. Stamens with the filaments 1-2 mm long; anthers 4-6 mm long, not always well-developed, lanceolate, connivent, yellow, poricidal at the tips, the pores lengthening to slits with age. Ovary glabrous; style 10-11 mm x ca. 1 mm, exceeding stamens by 3-4 mm, straight, glabrous; stigma clavate to capitate.Fruit a globose berry, 0.8-1.5 cm in diameter, green, glabrous.Seeds from living specimens ovoid and ca. 2 mm long, whitish to greenish in fresh condition and drying brownish, with a thick covering of \u201chair-like\u201d lateral walls of the testal cells that make the seeds mucilaginous when wet, green-white throughout; testal cells honeycomb-shaped when lateral walls removed by enzyme digestion.",
+            "char_json": [
+                {
+                    "characteristic": "life history",
+                    "value": "herb"
+                },
+                {
+                    "characteristic": "growth form",
+                    "value": "herb"
+                },
+                {
+                    "characteristic": "plant height",
+                    "value": "25-50 cm"
+                },
+                {
+                    "characteristic": "stem diameter",
+                    "value": "3-5 mm"
+                },
+                {
+                    "characteristic": "leaf arrangement",
+                    "value": "odd-pinnate"
+                },
+                {
+                    "characteristic": "leaf shape",
+                    "value": "membranous to chartaceous"
+                },
+                {
+                    "characteristic": "leaf surface texture",
+                    "value": "pubescent adaxially and abaxially with hairs like those of the stems"
+                },
+                {
+                    "characteristic": "leaf margins",
+                    "value": "finely ciliate and denticulate"
+                },
+                {
+                    "characteristic": "lateral leaflet pairs",
+                    "value": "2-4"
+                },
+                {
+                    "characteristic": "proximal pair reduction",
+                    "value": "greatly reduced in size"
+                },
+                {
+                    "characteristic": "distal lateral leaflets",
+                    "value": "4.5-9.5 x 2.4-4 cm"
+                },
+                {
+                    "characteristic": "terminal leaflet",
+                    "value": "6.5-13 x 3.3-8.2 cm"
+                },
+                {
+                    "characteristic": "interjected leaflets",
+                    "value": "0-5"
+                },
+                {
+                    "characteristic": "petiolule length",
+                    "value": "up to 10 mm long"
+                },
+                {
+                    "characteristic": "petiole length",
+                    "value": "2.5-6 cm"
+                },
+                {
+                    "characteristic": "pseudostipule length",
+                    "value": "up to 10 mm long"
+                },
+                {
+                    "characteristic": "inflorescence shape",
+                    "value": "terminal with a subtending axillary bud"
+                },
+                {
+                    "characteristic": "inflorescence forked",
+                    "value": "yes"
+                },
+                {
+                    "characteristic": "inflorescence location",
+                    "value": "distal half of the plant"
+                },
+                {
+                    "characteristic": "flower number",
+                    "value": "13-21"
+                },
+                {
+                    "characteristic": "flower type",
+                    "value": "perfect"
+                },
+                {
+                    "characteristic": "peduncle length",
+                    "value": "4-19 cm"
+                },
+                {
+                    "characteristic": "pedicel length",
+                    "value": "1.3-2.1 mm"
+                },
+                {
+                    "characteristic": "pedicel spacing",
+                    "value": "1-10 mm apart"
+                },
+                {
+                    "characteristic": "pedicel articulation",
+                    "value": "at about the middle"
+                },
+                {
+                    "characteristic": "calyx length",
+                    "value": "6-7 mm"
+                },
+                {
+                    "characteristic": "corolla shape",
+                    "value": "pentagonal"
+                },
+                {
+                    "characteristic": "corolla edges",
+                    "value": "flat, not folded dorsally"
+                },
+                {
+                    "characteristic": "corolla color",
+                    "value": "white to white tinged with blue"
+                },
+                {
+                    "characteristic": "anther length",
+                    "value": "4-6 mm"
+                },
+                {
+                    "characteristic": "anther shape",
+                    "value": "lanceolate"
+                },
+                {
+                    "characteristic": "anther color",
+                    "value": "yellow"
+                },
+                {
+                    "characteristic": "anther dehiscence",
+                    "value": "poricidal at the tips"
+                },
+                {
+                    "characteristic": "filament length",
+                    "value": "1-2 mm"
+                },
+                {
+                    "characteristic": "ovary style length",
+                    "value": "10-11 mm"
+                },
+                {
+                    "characteristic": "ovary style shape",
+                    "value": "straight, glabrous"
+                },
+                {
+                    "characteristic": "fruit shape",
+                    "value": "globose berry"
+                },
+                {
+                    "characteristic": "fruit color",
+                    "value": "green"
+                },
+                {
+                    "characteristic": "seed shape",
+                    "value": "ovoid"
+                },
+                {
+                    "characteristic": "seed color",
+                    "value": "whitish to greenish in fresh condition and drying brownish"
+                },
+                {
+                    "characteristic": "seed mucilaginous property",
+                    "value": "yes"
+                }
+            ],
+            "failed_str": null
+        },
+        {
+            "coreid": "wfo-0001025645",
+            "status": "success",
+            "original_description": "Herbaceous tuber-bearing perennials 0.3-0.8 m tall. Stems 4-6 mm in diameter at base of plant.Sympodial units typically 3-6-foliate.Pseudostipules 8-10 mm long, lunate. Leaves odd-pinnate, 10-16 cm long, 4-12 cm wide, puberulent or glabrous adaxially and abaxially; petioles 1-3.5 cm long; lateral leaflet pairs 4-5, the second most distal lateral leaflets larger than the most distal, then the size of the lateral leaflets diminishing gradually towards the base of the leaf; most distal lateral leaflets 3-5.5 cm long, 1-2 cm wide, lanceolate to elliptic-lanceolate, apex acute, base oblique, sessile, decurrent on the rachis; terminal leaflet 4-7 cm long, 1-2 cm wide, lanceolate to elliptic-lanceolate, apex acute to acuminate, base cuneate; interjected leaflets absent.Inflorescence a dichasially branched, ebracteate, monochasial or dichasial cyme, 2-3 forked, generally in the distal half of the plant, with 12-17 flowers, all flowers perfect, peduncle 2-4.5 cm long; pedicels 15-25 mm long, articulate between the proximal \u00bc and the distal \u00bc.Flowers with the calyx up to 5 mm long, lobes oblong or elliptic, mucronate, acumens 0.5-1 mm long. Corollas 2.5 cm in diameter, stellate, without acumens, edges of corolla flat, not folded dorsally, white. Anthers 5-5.5 mm long, connate, yellow, apically poricidally dehiscent and often maturing to a short introrse apical slit, filaments 1-4 mm long. Ovary with style 10-11 mm long, exceeding stamens by 2-3 mm, straight, with stigma globose.Fruits 0.8 cm in diameter, globose, green throughout.Seeds from living specimens green-white throughout, ovoid, ca. 2 mm long, with a thick covering of \u201chair-like\u201d lateral walls of the testal cells that make the seeds mucilaginous when wet. Removal of these hair-like lateral walls by enzyme digestion reveals a honeycomb pattern at their base.",
+            "char_json": [
+                {
+                    "characteristic": "life history",
+                    "value": "perennial"
+                },
+                {
+                    "characteristic": "growth form",
+                    "value": "herbaceous"
+                },
+                {
+                    "characteristic": "plant height",
+                    "value": "0.3-0.8 m"
+                },
+                {
+                    "characteristic": "stem diameter",
+                    "value": "4-6 mm"
+                },
+                {
+                    "characteristic": "sympodial unit foliation",
+                    "value": "3-6-foliate"
+                },
+                {
+                    "characteristic": "pseudostipule length",
+                    "value": "8-10 mm"
+                },
+                {
+                    "characteristic": "pseudostipule shape",
+                    "value": "lunate"
+                },
+                {
+                    "characteristic": "leaf arrangement",
+                    "value": "odd-pinnate"
+                },
+                {
+                    "characteristic": "leaf shape",
+                    "value": "10-16 cm long, 4-12 cm wide"
+                },
+                {
+                    "characteristic": "leaf surface texture",
+                    "value": "puberulent or glabrous adaxially and abaxially"
+                },
+                {
+                    "characteristic": "petiole length",
+                    "value": "1-3.5 cm"
+                },
+                {
+                    "characteristic": "lateral leaflet pair size",
+                    "value": "4-5, then diminishing gradually towards the base of the leaf"
+                },
+                {
+                    "characteristic": "terminal leaflet size",
+                    "value": "4-7 cm long, 1-2 cm wide"
+                },
+                {
+                    "characteristic": "terminal leaflet shape",
+                    "value": "lanceolate to elliptic-lanceolate"
+                },
+                {
+                    "characteristic": "terminal leaflet apex",
+                    "value": "acute to acuminate"
+                },
+                {
+                    "characteristic": "terminal leaflet base",
+                    "value": "cuneate"
+                },
+                {
+                    "characteristic": "terminal leaflet attachment",
+                    "value": "sessile, decurrent on the rachis"
+                },
+                {
+                    "characteristic": "interjected leaflet number",
+                    "value": "absent"
+                },
+                {
+                    "characteristic": "inflorescence shape",
+                    "value": "dichasially branched, ebracteate, monochasial or dichasial cyme"
+                },
+                {
+                    "characteristic": "inflorescence forked",
+                    "value": "2-3 forked"
+                },
+                {
+                    "characteristic": "inflorescence location",
+                    "value": "generally in the distal half of the plant"
+                },
+                {
+                    "characteristic": "flower number",
+                    "value": "12-17"
+                },
+                {
+                    "characteristic": "flower type",
+                    "value": "perfect"
+                },
+                {
+                    "characteristic": "peduncle length",
+                    "value": "2-4.5 cm"
+                },
+                {
+                    "characteristic": "pedicel length",
+                    "value": "15-25 mm"
+                },
+                {
+                    "characteristic": "pedicel articulation",
+                    "value": "between the proximal \u00bc and the distal \u00bc"
+                },
+                {
+                    "characteristic": "calyx length",
+                    "value": "up to 5 mm"
+                },
+                {
+                    "characteristic": "corolla shape",
+                    "value": "stellate"
+                },
+                {
+                    "characteristic": "corolla edges",
+                    "value": "flat, not folded dorsally"
+                },
+                {
+                    "characteristic": "corolla color",
+                    "value": "white"
+                },
+                {
+                    "characteristic": "anther length",
+                    "value": "5-5.5 mm"
+                },
+                {
+                    "characteristic": "anther shape",
+                    "value": "connate"
+                },
+                {
+                    "characteristic": "anther color",
+                    "value": "yellow"
+                },
+                {
+                    "characteristic": "anther dehiscence",
+                    "value": "apically poricidally dehiscent and often maturing to a short introrse apical slit"
+                },
+                {
+                    "characteristic": "filament length",
+                    "value": "1-4 mm"
+                },
+                {
+                    "characteristic": "ovary style length",
+                    "value": "10-11 mm"
+                },
+                {
+                    "characteristic": "ovary style shape",
+                    "value": "straight"
+                },
+                {
+                    "characteristic": "fruit shape",
+                    "value": "globose"
+                },
+                {
+                    "characteristic": "fruit color",
+                    "value": "green throughout"
+                },
+                {
+                    "characteristic": "seed shape",
+                    "value": "ovoid"
+                },
+                {
+                    "characteristic": "seed color",
+                    "value": "green-white throughout"
+                },
+                {
+                    "characteristic": "seed mucilaginous property",
+                    "value": "with a thick covering of \u201chair-like\u201d lateral walls of the testal cells that make the seeds mucilaginous when wet"
+                },
+                {
+                    "characteristic": "seed digestion",
+                    "value": "by enzyme digestion reveals a honeycomb pattern at their base"
+                },
+                {
+                    "characteristic": "seed removal",
+                    "value": "removal of these hair-like lateral walls"
+                },
+                {
+                    "characteristic": "seed living specimen",
+                    "value": "from living specimens"
+                }
+            ],
+            "failed_str": null
+        },
+        {
+            "coreid": "wfo-0001025646",
+            "status": "success",
+            "original_description": "Herbaceous tuber-bearing perennials 0.25-0.4 m tall. Stems 2-4 mm in diameter at base of plant.Sympodial units typically 3-6-foliate.Pseudostipules to 1-7 mm long, lunate. Leaves odd-pinnate, 4-15.5 cm long, 2.3-9.0 cm wide, puberulent to strigose adaxially and abaxially; petioles 0.6-3 cm long; lateral leaflet pairs 2-4, the the size of the lateral leaflets diminishing gradually or abruptly towards the base of the leaf; most distal lateral leaflets 1.1-4.5 cm long, 0.6-2.3 cm wide, elliptic to ovate, apex acute to acuminate, base oblique to cuneate, sessile or petiolules up to 3 mm long or sometimes the most distal lateral leaflets slightly decurrent; terminal leaflet 1.2-7.0 cm long, 0.5-2.1 cm wide, elliptic to obovate, apex acute to acuminate, base cuneate; interjected leaflets 0-4.Inflorescence a dichasially branched, ebracteate, monochasial or dichasial cyme, 2-3 forked, generally in the distal half of the plant, with 4-10 flowers, all flowers perfect, peduncle 3.2-6 cm long; pedicels 0.7-3.5 mm long, articulate between the proximal \u00bc and the distal \u00bc.Flowers with the calyx 3.5-7 mm long, lobes acute to attenuate, apiculate to caudate, acumens 1.5-3 mm long. Corollas 1.1-1.4 cm in diameter, pentagonal, acumens 2.5-3 mm long, edges of corolla flat, not folded dorsally, white. Anthers 4-5 mm long, connate, yellow, apically poricidally dehiscent and often maturing to a short introrse apical slit, filaments 1-4 mm long. Ovary with style 7-8 mm long, exceeding stamens by 1.2 mm, straight, with stigma globose.Mature fruits not seen (fruits probably globose, like the ovary).Seeds not seen",
+            "char_json": [
+                {
+                    "characteristic": "life history",
+                    "value": "perennial"
+                },
+                {
+                    "characteristic": "growth form",
+                    "value": "herbaceous tuber-bearing"
+                },
+                {
+                    "characteristic": "plant height",
+                    "value": "0.25-0.4 m"
+                },
+                {
+                    "characteristic": "stem diameter",
+                    "value": "2-4 mm"
+                },
+                {
+                    "characteristic": "sympodial unit foliation",
+                    "value": "3-6-foliate"
+                },
+                {
+                    "characteristic": "pseudostipule length",
+                    "value": "1-7 mm"
+                },
+                {
+                    "characteristic": "pseudostipule shape",
+                    "value": "lunate"
+                },
+                {
+                    "characteristic": "leaf arrangement",
+                    "value": "odd-pinnate"
+                },
+                {
+                    "characteristic": "leaf shape",
+                    "value": "elliptic to ovate"
+                },
+                {
+                    "characteristic": "leaf surface texture",
+                    "value": "puberulent to strigose"
+                },
+                {
+                    "characteristic": "petiole length",
+                    "value": "0.6-3 cm"
+                },
+                {
+                    "characteristic": "lateral leaflet pair size",
+                    "value": "1.1-4.5 cm long, 0.6-2.3 cm wide"
+                },
+                {
+                    "characteristic": "lateral leaflet pair shape",
+                    "value": "elliptic to ovate"
+                },
+                {
+                    "characteristic": "lateral leaflet pair apex",
+                    "value": "acute to acuminate"
+                },
+                {
+                    "characteristic": "lateral leaflet pair base",
+                    "value": "oblique to cuneate"
+                },
+                {
+                    "characteristic": "lateral leaflet pair attachment",
+                    "value": "sessile or petiolules up to 3 mm long"
+                },
+                {
+                    "characteristic": "lateral leaflet pair decurrence",
+                    "value": "slightly decurrent"
+                },
+                {
+                    "characteristic": "terminal leaflet size",
+                    "value": "1.2-7.0 cm long, 0.5-2.1 cm wide"
+                },
+                {
+                    "characteristic": "terminal leaflet shape",
+                    "value": "elliptic to obovate"
+                },
+                {
+                    "characteristic": "terminal leaflet apex",
+                    "value": "acute to acuminate"
+                },
+                {
+                    "characteristic": "terminal leaflet base",
+                    "value": "cuneate"
+                },
+                {
+                    "characteristic": "interjected leaflet number",
+                    "value": "0-4"
+                },
+                {
+                    "characteristic": "inflorescence shape",
+                    "value": "dichasially branched, ebracteate, monochasial or dichasial cyme"
+                },
+                {
+                    "characteristic": "inflorescence forkedness",
+                    "value": "2-3 forked"
+                },
+                {
+                    "characteristic": "inflorescence location",
+                    "value": "generally in the distal half of the plant"
+                },
+                {
+                    "characteristic": "flower number",
+                    "value": "4-10"
+                },
+                {
+                    "characteristic": "flower type",
+                    "value": "perfect"
+                },
+                {
+                    "characteristic": "peduncle length",
+                    "value": "3.2-6 cm"
+                },
+                {
+                    "characteristic": "pedicel length",
+                    "value": "0.7-3.5 mm"
+                },
+                {
+                    "characteristic": "pedicel articulation",
+                    "value": "articulate between the proximal \u00bc and the distal \u00bc"
+                },
+                {
+                    "characteristic": "calyx length",
+                    "value": "3.5-7 mm"
+                },
+                {
+                    "characteristic": "calyx lobe shape",
+                    "value": "acute to attenuate"
+                },
+                {
+                    "characteristic": "calyx lobe apex",
+                    "value": "apiculate to caudate"
+                },
+                {
+                    "characteristic": "corolla diameter",
+                    "value": "1.1-1.4 cm"
+                },
+                {
+                    "characteristic": "corolla shape",
+                    "value": "pentagonal"
+                },
+                {
+                    "characteristic": "corolla edge",
+                    "value": "flat, not folded dorsally"
+                },
+                {
+                    "characteristic": "corolla color",
+                    "value": "white"
+                },
+                {
+                    "characteristic": "anther length",
+                    "value": "4-5 mm"
+                },
+                {
+                    "characteristic": "anther shape",
+                    "value": "connate"
+                },
+                {
+                    "characteristic": "anther color",
+                    "value": "yellow"
+                },
+                {
+                    "characteristic": "anther dehiscence",
+                    "value": "apically poricidally dehiscent and often maturing to a short introrse apical slit"
+                },
+                {
+                    "characteristic": "filament length",
+                    "value": "1-4 mm"
+                },
+                {
+                    "characteristic": "ovary style length",
+                    "value": "7-8 mm"
+                },
+                {
+                    "characteristic": "ovary style shape",
+                    "value": "straight"
+                },
+                {
+                    "characteristic": "ovary stigma shape",
+                    "value": "globose"
+                },
+                {
+                    "characteristic": "fruit shape",
+                    "value": "globose (probably)"
+                },
+                {
+                    "characteristic": "seed shape",
+                    "value": "NA"
+                },
+                {
+                    "characteristic": "seed color",
+                    "value": "NA"
+                }
+            ],
+            "failed_str": null
+        },
+        {
+            "coreid": "wfo-0001025647",
+            "status": "invalid_json_followup",
+            "original_description": "Herbs 0.06-0.24 m tall, rosette forming to erect. Stems 2-3 mm in diameter at base of plant, green, unwinged, moderately to densely pubescent with multicellular hairs; tubers typically borne singly at the end of each stolon.Sympodial units tri- to plurifoliate, not geminate.Leaves odd-pinnate, the blades 6.2-11 x 1.5-5 cm, green, membranous to chartaceous, moderately to densely pubescent with hairs like those of the stems; lateral leaflet pairs 4-6, often subequal except for the most proximal 1 or 2 pairs that are greatly reduced in size; most distal lateral leaflets 1.3-2.9 x 0.4-1.5 cm, narrowly elliptic to elliptic to linear, the apex acute to obtuse, the base oblique and broadly decurrent; terminal leaflet 1.5-5.5 x 0.6-3 cm, narrowly elliptic to broadly elliptic, the apex acute to obtuse, the base attenuate; interjected leaflets 0-4, sessile to short petiolulate, ovate to orbicular; petioles 0.8-3 cm, moderately to densely pubescent with hairs like those of the stem. Pseudostipules frequently absent to up to 2 mm long and scale-like, pubescent with hairs like those of the stem.Inflorescences 2-4 cm, with a subtending axillary bud, often near the base but sometimes in the distal half of the plant, unbranched, with 2-5 flowers, with all flowers apparently perfect, the axes moderately to densely pubescent with hairs like those of the stem; peduncle 4-10 cm long; pedicels 1.4-5 mm long in flower and fruit, spaced 1-10 mm apart, articulated very high in the distal half.Flowers homostylous, 5-merous. Calyx 3-6 mm long, the tube 1-2 mm, the lobes 1-5 mm, attenuate, the acumens 1-3 mm long, moderately to densely pubescent with hairs like those of the stem. Corolla 1.2-3 cm in diameter, rotate, light blue, the tube 1-2 mm long, the acumens 1-3 mm long, the corolla edges flat, not folded dorsally, glabrous abaxially, minutely puberulent adaxially, especially along the midribs, ciliate at the margins, especially at the tips of the corollas. Stamens with the filaments 1-2 mm long; anthers 2.5-3 mm long, lanceolate, connivent, yellow, poricidal at the tips, the pores lengthening to slits with age. Ovary glabrous; style 5-6 mm x ca. 1 mm, exceeding stamens by 2-3 mm, straight, glabrous; stigma clavate to capitate.Fruit a globose berry, ca. 1 cm in diameter, green when ripe, glabrous.Seeds from living specimens ovoid and ca. 2 mm long, whitish to greenish in fresh condition and drying brownish, with a thick covering of \u201chair-like\u201d lateral walls of the testal cells that make the seeds mucilaginous when wet, green-white throughout; testal cells honeycomb-shaped when lateral walls removed by enzyme digestion.",
+            "char_json": null,
+            "failed_str": "[\n  {\n    \"height\": \"0.06-0.24 m\",\n    \"stem_diameter\": \"2-3 mm\",\n    \"stem_pubescence\": \"moderately to densely pubescent\",\n    \"tuber_location\": \"end of each stolon\",\n    \"leaf_blade_shape\": \"odd-pinnate\",\n    \"leaf_blade_size\": \"6.2-11 x 1.5-5 cm\",\n    \"leaf_blade_pubescence\": \"moderately to densely pubescent\",\n    \"lateral_leaflet_pairs\": \"4-6\",\n    \"proximal_leaflet_reduction\": \"greatly reduced in size\",\n    \"distal_lateral_leaflets\": \"1.3-2.9 x 0.4-1.5 cm\",\n    \"terminal_leaflet\": \"1.5-5.5 x 0.6-3 cm\",\n    \"interjected_leaflets\": \"0-4\",\n    \"petiole_length\": \"0.8-3 cm\",\n    \"pseudostipule_presence\": \"frequently absent to up to 2 mm long\",\n    \"inflorescence_length\": \"2-4 cm\",\n    \"inflorescence_pubescence\": \"moderately to densely pubescent\",\n    \"peduncle_length\": \"4-10 cm\",\n    \"pedicel_length\": \"1.4-5 mm\",\n    \"pedicel_spacing\": \"1-10 mm apart\",\n    \"flower_perfection\": \"apparently perfect\",\n    \"calyx_length\": \"3-6 mm\",\n    \"calyx_pubescence\": \"moderately to densely pubescent\",\n    \"corolla_diameter\": \"1.2-3 cm\",\n    \"corolla_rotate\": \"rotate\",\n    \"corolla_pubescence\": \"glabrous abaxially, minutely puberulent adaxially\",\n    \"corolla_margin\": \"ciliate at the margins\",\n    \"stamen_filament_length\": \"1-2 mm\",\n    \"anther_length\": \"2.5-3 mm\",\n    \"anther_shape\": \"lanceolate\",\n    \"ovary_pubescence\": \"glabrous\",\n    \"style_length\": \"5-6 mm\",\n    \"style_shape\": \"straight\",\n    \"stigma_shape\": \"clavate to capitate\",\n    \"fruit_shape\": \"globose berry\",\n    \"fruit_size\": \"ca. 1 cm in diameter\",\n    \"seed_shape\": \"ovoid\",\n    \"seed_size\": \"ca. 2 mm long\",\n    \"seed_color\": \"whitish to greenish in fresh condition and drying brownish\",\n    \"seed_pubescence\": \"thick covering of 'hair-like' lateral walls of the testal cells\"\n  }\n]"
+        },
+        {
+            "coreid": "wfo-0001025652",
+            "status": "bad_structure_followup",
+            "original_description": "Shrub or small tree, 2-6 m tall; young stems and leaves densely red-papillose, the new growth appearing greyish and matte on live plants; stems fleshy and green, strongly winged, the wings 2-5 mm broad; bark of older stems soon glabrate, greyish.Sympodial units difoliate, geminate.Leaves elliptic, widest at the middle, glabrous and shiny above, paler below, occasionally minutely red-papillose on the veins below; major leaves 20-50 x 10-20 cm, with 15-17 parallel pairs of main lateral veins, the apex acute, the base acuminate, decurrent on the petiole and from there onto the stem; petioles strongly winged from the bases of the decurrent leaf blades, 4-7 cm long; minor leaves differing from the major ones only in size, 15-19 x 9-11 cm, the apex acute, the base acuminate, winged onto the petiole; petioles 1.5-2 cm long.Inflorescences opposite the leaves, simple or very occasionally furcate, 0.5-1 cm long, 3-5-flowered, minutely red-papillose like the young stems and leaves; pedicel scars closely spaced and overlapping. Buds ovoid, the calyx a completely closed envelope until just before anthesis, when the corolla emerges and tears the lobes. Pedicels at anthesis white and fleshy, 1.5-2 cm long, abruptly narrowing below the calyx tube, then tapering to 0.5-1 mm in diam. dry specimens (thicker in live plants).Flowers with the calyx tube campanulate, 3-3.5 mm long, occasionally minutely red-papillose, the lobes very irregular in shape, 3-5 mm long, the margins thick and white in dry specimens; corolla white, rather fleshy, 2-3 cm in diam., planar at anthesis, lobed nearly to the base, the corolla tube only 1 mm long, the lobes wider at the middle than at the base, the tips and margins of the lobes minutely papillose; anthers 4-6 x 1-1.5 mm, poricidal at the tips, the pores tear-drop shaped, the anthers tightly connate at anthesis; free portion of the filaments ca. 1 mm long, the filament tube ca. 0.5 mm long; ovary densely pinkish-grey papillose, the papillae minute in flower, growing with the fruit; style straight, ca. 1.3 cm long; stigma bilobed, the surface minutely papillose.Flowers with the calyx tube campanulate, 3-3.5 mm long, occasionally minutely red-papillose, the lobes very irregular in shape, 3-5 mm long, the margins thick and white in dry specimens; corolla white, rather fleshy, 2-3 cm in diam., planar at anthesis, lobed nearly to the base, the corolla tube only 1 mm long, the lobes wider at the middle than at the base, the tips and margins of the lobes minutely papillose; anthers 4-6 x 1-1.5 mm, poricidal at the tips, the pores tear-drop shaped, the anthers tightly connate at anthesis; free portion of the filaments ca. 1 mm long, the filament tube ca. 0.5 mm long; ovary densely pinkish-grey papillose, the papillae minute in flower, growing with the fruit; style straight, ca. 1.3 cm long; stigma bilobed, the surface minutely papillose.Seeds pale tan, ovoid-reniform, ca. 5 x 4 mm, the surfaces minutely pitted.",
+            "char_json": null,
+            "failed_str": "[{'name': 'Shrub or small tree', 'height': '2-6 m', 'young_stems_and_leaves': 'densely red-papillose', 'new_growth': 'appearing greyish and matte on live plants', 'stems': {'fleshy': True, 'green': True, 'strongly_winged': True, 'wings': '2-5 mm broad'}, 'bark': {'older_stems': 'soon glabrate, greyish'}, 'sympodial_units': {'difoliate': True, 'geminat': True}, 'leaves': {'elliptic': True, 'widest_at_middle': True, 'glabrous_and_shiny_above': True, 'paler_below': True, 'minutely_red-papillose_on_veins_below': True, 'major_leaves': {'size': '20-50 x 10-20 cm', 'parallel_pairs_of_main_lateral_veins': '15-17', 'apex': 'acute', 'base': 'acuminate', 'decurrent_on_petiole_and_stem': True}, 'minor_leaves': {'size': '15-19 x 9-11 cm', 'apex': 'acute', 'base': 'acuminate', 'winged_on_petiole': True}}, 'petioles': {'strongly_winged_from_bases_of_decurrent_leaf_blades': True, 'length': '4-7 cm'}, 'inflorescences': {'opposite_leaves': True, 'simple_or_furcate': True, 'length': '0.5-1 cm', 'flowered': '3-5', 'minutely_red-papillose_like_young_stems_and_leaves': True, 'pedicel_scars': {'closely_spaced_and_overlapping': True}}, 'buds': {'ovoid': True, 'calyx': {'completely_closed_envelope': True, 'until_just_before_anthesis': True}}, 'pedicels': {'at_anthesis': 'white_and_fleshy', 'length': '1.5-2 cm', 'abruptly_narrowing_below_calyx_tube': True, 'tapering_to_0.5-1_mm_in_diam': True, 'dry_specimens': 'thicker_in_live_plants'}, 'flowers': {'calyx_tube': {'campanulate': True, 'length': '3-3.5 mm', 'minutely_red-papillose': True}, 'lobes': {'very_irregular_in_shape': True, 'length': '3-5 mm', 'margins': 'thick_and_white_in_dry_specimens'}, 'corolla': {'white': True, 'rather_fleshy': True, 'diam': '2-3 cm', 'planar_at_anthesis': True, 'lobed_nearly_to_base': True, 'corolla_tube': '1 mm long', 'lobes': {'wider_at_middle_than_at_base': True, 'tips_and_margins': 'minutely_papillose'}}, 'anthers': {'4-6 x 1-1.5 mm': True, 'poricidal_at_tips': True, 'pores': 'tear-drop_shaped', 'anthers_tightly_connate_at_anthesis': True}, 'free_portion_of_filaments': 'ca. 1 mm long', 'filament_tube': 'ca. 0.5 mm long', 'ovary': {'densely_pinkish-grey_papillose': True, 'papillae': 'minute_in_flower', 'growing_with_fruit': True}, 'style': 'straight', 'length': 'ca. 1.3 cm', 'stigma': {'bilobed': True, 'surface': 'minutely_papillose'}}, 'seeds': {'pale_tan': True, 'ovoid-reniform': True, 'size': 'ca. 5 x 4 mm', 'surfaces': 'minutely_pitted'}}]"
+        },
+        {
+            "coreid": "wfo-0001025653",
+            "status": "bad_structure_followup",
+            "original_description": "Low shrub to at least 20 cm, rhizomatous, the internodes to 1.3 cm long. Stems densely pubescent with yellow-ferruginous to ferruginous, sessile and shot-stipitate porrect stellae, the stipes to 0.13 mm long, the stellae persistent, 0.2\u20130.4 broad, with 7\u201312 rays, the midpoint erect, shorter than to longer than the rays; bark reddish brown, a transparent sloughing layer absent on young stems; stems unarmed. Sympodia plurifoliate. Leaves simple, the blades 2.5\u20134.0 \u00d7 1.9\u20133.3 cm, 1\u20131.5 times as long as wide, ovate, chartaceous, densely pubescent above with sessile and short-stipitate porrect stellae when young, densely pubescent when mature, the stellae 0.3\u20130.5 mm in diameter, with 6\u20139 rays, the stipes to 0.1 mm long, the midpoint of the stellae erect or clinate less than 90\u00b0, shorter than to \u00b1equal to the rays, very densely pubescent below with sessile and short-stipitate porrect stellae when young, very densely pubescent when mature, the stellae 0.3\u20130.8 mm in diameter, with 8\u201311 rays, the stipes to 0.15 mm long, the midpoint of the stellae \u00b1erect, shorter than the rays; blade unarmed or with a few straight prickles on the primary vein abaxially and the primary vein or the primary and secondary veins adaxially, with 4\u20136 veins on either side of the midvein, the midvein raised abaxially, distinct adaxially, the lateral veins craspedodromous, raised abaxially, distinct adaxially; blade base subcordate, truncate, or rounded, aequilateral or occasionally oblique; margin sinuate or lobed, the apices of the lobes obtuse; apex obtuse; petiole 0.6\u20131.6 cm long, 0.7\u20131.1 mm in diameter, channeled above, densely pubescent, unarmed or occasionally with a prickle. Inflorescence to 1.3 cm in flower, not seen in fruit, appearing lateral, extra-axillary, just below the leaf or leaf opposed, unbranched, with 6\u20138 flowers, all apparently fertile or potentially so, the axes densely pubescent, with sessile and stipitate porrect stellae, unarmed; peduncle in flower ca. 6.3 mm long, ca. 0.9 mm in diameter; pedicels ca. 4.5 mm long, ca. 0.5 mm in diameter at the base, ca. 0.6 mm in diameter below the calyx, straight, not noticeably increasing in diameter, densely pubescent, the bases congested to ca. 0.9 mm apart in flower, rigid, in two rows, articulate at the base. Buds globose, the calyx very densely stellate-pubescent, the corolla very densely stellate-pubescent,the surface of the corolla of the mature bud not seen. Flowers heterostylous, 5-merous. Calyx 2.3\u20133.2 mm long, with deltoid lobe tips, the tube 1.3\u20131.8 mm long, the lobe tips 1.0\u20131.6 \u00d7 1.1\u20131.3 mm long, the intersepalar tissue opaque when dry; not splitting at anthesis, densely pubescent abaxially, glabrous adaxially. Corolla ca. 0.9 cm in diameter, stellate with well developed, glabrous interpetalar tissue, the lobes ca. 3.1 \u00d7 1.6 mm, deltoid, the midrib ca. 4.2 \u00d7 2.6 mm, lanceolate, densely pubescent abaxially, glabrous adaxially, spread wide at anthesis. Stamens adnate to the corolla, the free portion of the filament ca. 0.8 mm long; anthers ca. 1.6 \u00d7 0.8 mm, acuminate, globolunate, scarcely attenuate, with minute apical pores, the pores directed adaxially, extending around the edge of the apex, the lateral sutures entire remaining intact with age. Ovary ca. 0.5 mm, globose, glabrous or with a few minute glandular hairs restricted to the apex; short styles ca. 0.7 mm long, ca. 0.1 mm in diameter, shorter than the stamens, not emerging from among the stamens, long styles ca. 3.0 mm long, ca. 0.2 mm in diameter, longer than the stamens, emerging between the anther apices, cylindrical or filiform, straight, sparsely pubescent with sessile porrect-stellate the rays much reduced, minute glandular; stigma ca. 0.1 mm in diameter, truncate. Fruits not known.Seeds not known.",
+            "char_json": null,
+            "failed_str": "[{'characteristic': 'Low shrub to at least 20 cm', 'description': 'Height'}, {'characteristic': 'Rhizomatous', 'description': 'Root system'}, {'characteristic': 'Internodes to 1.3 cm long', 'description': 'Stem length'}, {'characteristic': 'Stems densely pubescent with yellow-ferruginous to ferruginous', 'description': 'Stem hair color and density'}, {'characteristic': 'Stems sessile and shot-stipitate porrect stellae', 'description': 'Stem stellate structure'}, {'characteristic': 'Stipes to 0.13 mm long', 'description': 'Stipe length'}, {'characteristic': 'Stellae persistent, 0.2\u20130.4 broad', 'description': 'Stellate width'}, {'characteristic': 'Midpoint erect, shorter than to longer than the rays', 'description': 'Midpoint orientation and ray length'}, {'characteristic': 'Bark reddish brown', 'description': 'Bark color'}, {'characteristic': 'Transparent sloughing layer absent on young stems', 'description': 'Sloughing layer presence on young stems'}, {'characteristic': 'Stems unarmed', 'description': 'Stem armament'}, {'characteristic': 'Sympodia plurifoliate', 'description': 'Leaf arrangement'}, {'characteristic': 'Leaves simple, the blades 2.5\u20134.0 \u00d7 1.9\u20133.3 cm', 'description': 'Leaf size'}, {'characteristic': 'Leaves ovate, chartaceous, densely pubescent above', 'description': 'Leaf shape and hair density'}, {'characteristic': 'Stellae 0.3\u20130.5 mm in diameter, with 6\u20139 rays', 'description': 'Stellate diameter and ray number'}, {'characteristic': 'Midpoint of the stellae erect or clinate less than 90\u00b0', 'description': 'Midpoint orientation'}, {'characteristic': 'Blade unarmed or with a few straight prickles on the primary vein', 'description': 'Blade armament'}, {'characteristic': 'Blade base subcordate, truncate, or rounded', 'description': 'Blade base shape'}, {'characteristic': 'Margin sinuate or lobed', 'description': 'Leaf margin shape'}, {'characteristic': 'Apex obtuse', 'description': 'Leaf apex shape'}, {'characteristic': 'Petiole 0.6\u20131.6 cm long, 0.7\u20131.1 mm in diameter', 'description': 'Petiole length and diameter'}, {'characteristic': 'Petiole channeled above, densely pubescent', 'description': 'Petiole channeling and hair density'}, {'characteristic': 'Inflorescence to 1.3 cm in flower, not seen in fruit', 'description': 'Inflorescence size and fruit presence'}, {'characteristic': 'Inflorescence appearing lateral, extra-axillary, just below the leaf', 'description': 'Inflorescence position'}, {'characteristic': 'Flowers heterostylous, 5-merous', 'description': 'Flower structure and number'}, {'characteristic': 'Calyx 2.3\u20133.2 mm long, with deltoid lobe tips', 'description': 'Calyx length and lobe shape'}, {'characteristic': 'Corolla ca. 0.9 cm in diameter, stellate with well developed interpetalar tissue', 'description': 'Corolla size and interpetalar tissue development'}, {'characteristic': 'Stamens adnate to the corolla, the free portion of the filament ca. 0.8 mm long', 'description': 'Stamen attachment and filament length'}, {'characteristic': 'Anthers ca. 1.6 \u00d7 0.8 mm, acuminate, globolunate, scarcely attenuate', 'description': 'Anther shape and size'}, {'characteristic': 'Ovary ca. 0.5 mm, globose, glabrous or with a few minute glandular hairs', 'description': 'Ovary size and hair presence'}, {'characteristic': 'Styles ca. 0.7 mm long, ca. 0.1 mm in diameter, shorter than the stamens', 'description': 'Style length and diameter'}, {'characteristic': 'Fruits not known', 'description': 'Fruit presence'}, {'characteristic': 'Seeds not known', 'description': 'Seed presence'}]"
+        }
+    ]
+}
