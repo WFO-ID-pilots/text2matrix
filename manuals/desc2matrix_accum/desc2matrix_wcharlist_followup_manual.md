@@ -38,6 +38,30 @@ See `global_prompt` in `common_scripts/default_prompts.py`.
 
 See `global_followup_prompt` in `common_scripts/default_prompts.py`.
 
+## Arguments
+
+| Argument | Description | Required? | Default value |
+| --- | --- | --- | --- |
+| `descfile` (positional argument) | Path to the flora description file to transcribe | Yes | |
+| `charlistfile` (positional argument) | Path to the list of traits to use | Yes | |
+| `--charlistsep` | Character or string to use as separator in `charlistfile` | No | `,` |
+| `outputfile` (positional argument) | Path to the output JSON file | Yes | |
+| `--desctype` | Name of the 'type' that contains morphological descriptions in the descfile | Yes | |
+| `--sysprompt` | Path to a text file containing the system prompt to use | No | See above |
+| `--prompt` | Path to a text file containing the prompt to use | No | See above |
+| `--fprompt` | Path to a text file containing the follow-up prompt to use | No | See above |
+| `--silent` | If flag is present, suppress command-line output showing progress | No | `None` |
+| `--start` | Order ID (starting from 0) of the species in the descfile to start transcribing from | No | `0` |
+| `--spnum` | Number of species to transcribe | No | `None` (transcribe entire file) |
+| `--model` | Name of the base LLM to use. Specified LLM must be installed and running at `localhost:11434` | No | `llama3` |
+| `--temperature` | Model temperature between 0 and 1. See [here](https://github.com/ollama/ollama/blob/main/docs/modelfile.md) for detailed reference | No | `0.1` |
+| `--seed` | Random seed to use for reproducibility. Setting to 0 makes the output random. See [here](https://github.com/ollama/ollama/blob/main/docs/modelfile.md) for detailed reference | No | `1` |
+| `--repeatlastn` | Number of tokens(?) the model looks back to prevent repetition. Set to 0 to prevent this behaviour as default. See [here](https://github.com/ollama/ollama/blob/main/docs/modelfile.md) for detailed reference | No | 0 |
+| `--numpredict` | Number of tokens for model to generate. See [here](https://github.com/ollama/ollama/blob/main/docs/modelfile.md) for detailed reference | No | `2048` |
+| `--numctx` | Size of the context window used to generate the token See [here](https://github.com/ollama/ollama/blob/main/docs/modelfile.md) for detailed reference | No | `4096` |
+| `--topk` | Parameter adjusting the degree of 'conservativeness' in the model output. See [here](https://github.com/ollama/ollama/blob/main/docs/modelfile.md) for detailed reference | No | `None` (set to `40` by Ollama) |
+| `--topp` | Parameter adjusting the degree of 'conservativeness' in the model output. See [here](https://github.com/ollama/ollama/blob/main/docs/modelfile.md) for detailed reference | No | `None` (set to `0.9` by Ollama) |
+
 ## Output
 
 The output is a single JSON object with the following keys:
