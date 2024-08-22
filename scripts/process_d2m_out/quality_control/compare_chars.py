@@ -93,18 +93,18 @@ def main():
         'nchars_d2m', # Number of characteristics with 'non-nully' values in the d2m output
         'nchars_key', # Number of characteristics with non-null values in the key
         'nchars_common', # Number of characteristic names that are exactly the same between the d2m output and the key
-        'nwords_common', # Number of non-stop words that are shared between the d2m output and the structured description in the key
         'nwords_d2m_only', # Number of non-stop words in the d2m output only
         'nwords_key_only', # Number of non-stop words in the key description only
-        'words_common', # Comma-separated list of non-stop words that the d2m output and the key output share
+        'nwords_common', # Number of non-stop words that are shared between the d2m output and the structured description in the key
         'words_d2m_only', # Comma-separated list of non-stop words that are only in the d2m output
         'words_key_only', # Comma-separated list of non-stop words that are only in the structured key
-        'nwords_common_vals', # Same as nwords_common, but with characteristic values only
+        'words_common', # Comma-separated list of non-stop words that the d2m output and the key output share
         'nwords_d2m_only_vals', # With characteristic values only
         'nwords_key_only_vals', # With characteristic values only
-        'words_common_vals', # With characteristic values only
+        'nwords_common_vals', # Same as nwords_common, but with characteristic values only
         'words_d2m_only_vals', # With characteristic values only
-        'words_key_only_vals' # With characteristic values only
+        'words_key_only_vals', # With characteristic values only
+        'words_common_vals' # With characteristic values only
     ])
 
     # Iterate through the species in the d2m output
