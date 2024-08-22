@@ -2,6 +2,8 @@
 This script contains the default prompts that are used across the desc2matrix scripts.
 """
 
+# ===== Common prompts =====
+
 # System prompt
 global_sys_prompt = """
 You are a diligent robot assistant made by a botanist. You have expert knowledge of botanical terminology.
@@ -10,10 +12,34 @@ Your answer must be as complete and accurate as possible.
 You must answer in valid JSON, with no other text.
 """
 
-# Prompt used for extracting a given list of characteristics
+# Follow-up prompt used across the scripts
+# [DESCRIPTION] and [MISSING_WORDS] are each replaced by the plant description and the list of missing words.
+# [CHARACTER_LIST] is replaced by the list of characteristics to extract.
+global_followup_prompt = """
+Please generate a new, more complete JSON response in the same format as before.
+
+Here are the words in the original description that you've omitted in your JSON response:
+[MISSING_WORDS]
+
+Some of these are broken parts of words that you have included in your final response. For example, the list might have the word 'seudostipule' when you have 'pseudostipule' in your JSON. Ignore such cases.
+Of the words in the above list, try to include all words that contain information about a plant trait that you have genuinely omitted.
+
+Remember to include the following list of characteristics in your output. Use the name of the characteristic as given in this list. If you can't find one or more of these characteristics in the given description, put "NA" as the corresponding value. If you find a characteristic in the given description that is not in this list, add that characteristic in your response.
+[CHARACTER_LIST]
+
+Do not include any text (e.g. introductory text) other than the valid array of JSON.
+Make sure to follow all the instructions given in the initial prompt.
+
+Here is the original description that you should transcribe:
+[DESCRIPTION]
+"""
+
+# ===== Accumulation-specific prompts =====
+
+# Prompt used for extracting a given list of characteristics in accumulation runs
 # [DESCRIPTION] in the prompt text is replaced by the plant description.
 # [CHARACTER_LIST] in the prompt text is replaced by the list of characteristics to extract.
-global_prompt = """
+global_accum_prompt = """
 You are given a botanical description of a plant species taken from published floras.
 You extract the types of characteristics mentioned in the description and their corresponding values, and transcribe them into JSON.
 Your answer should be an array of JSON with name of the characteristic and the corresponding value formatted as follows: {"characteristic":(name of characteristic), "value":(value of characteristic)}.
@@ -136,27 +162,41 @@ Here are the descriptions that you should transcribe:
 [DESCRIPTIONS]
 """
 
-# Follow-up prompt used across the scripts
-# [DESCRIPTION] and [MISSING_WORDS] are each replaced by the plant description and the list of missing words.
-# [CHARACTER_LIST] is replaced by the list of characteristics to extract.
-global_followup_prompt = """
-Please generate a new, more complete JSON response in the same format as before.
+# ===== Extraction-specific prompts =====
 
-Here are the words in the original description that you've omitted in your JSON response:
-[MISSING_WORDS]
+# Prompt used for extracting a given list of characteristics in extraction runs
+# This is more minimal than the accum prompt because we don't want the model to hallucinate character names other than the ones provided.
+# [DESCRIPTION] in the prompt text is replaced by the plant description.
+# [CHARACTER_LIST] in the prompt text is replaced by the list of characteristics to extract.
+global_ext_prompt = """
+You are given a botanical description of a plant species taken from published floras.
+You extract the types of characteristics mentioned in the description and their corresponding values, and transcribe them into JSON.
+Your answer should be an array of JSON with name of the characteristic and the corresponding value formatted as follows: {"characteristic":(name of characteristic), "value":(value of characteristic)}.
+(name of characteristic) should be substituted with the name of the characteristic, and (value of characteristic) should be substituted with the corresponding value.
+The name of every characteristic must be written in lowercase.
+Make sure that you surround your final answer with square brackets [ and ] so that it is a valid array.
+Do not include any text (e.g. introductory text) other than the valid array of JSON.
 
-Some of these are broken parts of words that you have included in your final response. For example, the list might have the word 'seudostipule' when you have 'pseudostipule' in your JSON. Ignore such cases.
-Of the words in the above list, try to include all words that contain information about a plant trait that you have genuinely omitted.
+For every species, transcribe every single one of the plant characteristics in the following list. Use the name of the characteristic verbatim as given in this list. If you can't find one or more of these characteristics in the given description, you must include it in the JSON but put "NA" as the corresponding value.
+Do not make up values of characteristics that are not mentioned in the description.
 
-Remember to include the following list of characteristics in your output. Use the name of the characteristic as given in this list. If you can't find one or more of these characteristics in the given description, put "NA" as the corresponding value. If you find a characteristic in the given description that is not in this list, add that characteristic in your response.
+Characteristics:
 [CHARACTER_LIST]
 
-Do not include any text (e.g. introductory text) other than the valid array of JSON.
-Make sure to follow all the instructions given in the initial prompt.
+Here are some examples of descriptions and their correponding transcription in JSON:
 
-Here is the original description that you should transcribe:
+Sentence: "Fruit: ovoid berry, 10-12 mm wide, 13-15 mm long, yellow to yellow-green throughout."
+JSON: {"characteristic": "fruit shape", "value": "ovoid"}, {"characteristic": "fruit type", "value": "berry"}, {"characteristic": "fruit width", "value": "10-12 mm"}, {"characteristic": "fruit length", "value": "13-15 mm"}, {"characteristic": "fruit colour", "value": "yellow to yellow-green"}
+
+Sentence: "Perennial dioecious herbs 60-100cm tall. Leaves alternate, green and glabrous adaxially and hirsute with white to greyish hair abaxially."
+JSON: {"characteristic": "life history", "value": "perennial"}, {"characteristic": "reproduction", "value": "dioecious"}, {"characteristic": "growth form", "value": "herb"}, , {"characteristic": "plant height", "value": "60-100 cm"}, {"characteristic": "leaf arrangement", "value": "alternate"}, {"characteristic": "leaf adaxial colour", "value": "green"}, {"characteristic": "leaf adaxial texture", "value": "glabrous"}, {"characteristic": "leaf abaxial texture", "value": "hirsute"}, {"characteristic": "leaf abaxial hair colour", "value": "white to greyish"}
+
+Here is the description that you should transcribe:
+
 [DESCRIPTION]
 """
+
+# ===== LangChain prompts =====
 
 # System prompt to use for initial trait list generation in desc2matrix_accum with LangChain
 global_langchain_init_prompt = """
