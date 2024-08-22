@@ -29,30 +29,38 @@ def main():
 
     # ===== Check uniformity between the two output files =====
 
-    # Extract metadata from the two files
-    part1_meta = part1_dict['metadata']
-    part2_meta = part2_dict['metadata']
-    
-    # Check if the run modes are wcharlist
-    if not (part1_meta['mode'].startswith('desc2json_wcharlist') and part2_meta['mode'].startswith('desc2json_wcharlist')):
-        raise Exception('One or more output files are not from desc2matrix_wcharlist')
-    
-    # Check if the run modes are the same
-    if part1_meta['mode'] != part2_meta['mode']:
-        raise Exception('The run modes do not match between the two files')
-    
-    # Check if the prompts are the same
-    prompt_names = ['sys_prompt', 'prompt', 'tab_prompt', 'f_prompt', 'init_prompt']
-    if False in [part1_meta.get(prompt_name) == part2_meta.get(prompt_name) for prompt_name in prompt_names]:
-        raise Exception('One or more prompts do not match between the two files')
-    
-    # Check if the model parameters are the same
-    if False in [part1_meta['params'][param_name] == part2_meta['params'][param_name] for param_name in part1_meta['params']]:
-        raise Exception('One or more model parameter values do not match between the two files')
-    
-    # Check if the charlists used for extraction are the same
-    if part1_meta['charlist'] != part2_meta['charlist']:
-        raise Exception('The lists of characters for extraction do not match between the two files')
+    # Try for KeyError, which would indicate badly-structured script output
+    try:
+        # Extract metadata from the two files
+        part1_meta = part1_dict['metadata']
+        part2_meta = part2_dict['metadata']
+        
+        # Check if the run modes are wcharlist
+        if not (part1_meta['mode'].startswith('desc2json_wcharlist') and part2_meta['mode'].startswith('desc2json_wcharlist')):
+            raise Exception('One or more output files are not from desc2matrix_wcharlist')
+        
+        # Check if the base model used are the same
+        if part1_meta['model_name'] != part2_meta['model_name']:
+            raise Exception('Different models were used to generate the two files')
+        
+        # Check if the run modes are the same
+        if part1_meta['mode'] != part2_meta['mode']:
+            raise Exception('The run modes do not match between the two files')
+        
+        # Check if the prompts are the same
+        prompt_names = ['sys_prompt', 'prompt', 'tab_prompt', 'f_prompt', 'init_prompt']
+        if False in [part1_meta.get(prompt_name) == part2_meta.get(prompt_name) for prompt_name in prompt_names]:
+            raise Exception('One or more prompts do not match between the two files')
+        
+        # Check if the model parameters are the same
+        if False in [part1_meta['params'][param_name] == part2_meta['params'][param_name] for param_name in part1_meta['params']]:
+            raise Exception('One or more model parameter values do not match between the two files')
+        
+        # Check if the charlists used for extraction are the same
+        if part1_meta['charlist'] != part2_meta['charlist']:
+            raise Exception('The lists of characters for extraction do not match between the two files')
+    except KeyError as e:
+        raise Exception('The input files were badly structured, causing the following KeyError:') from e
 
     # ===== Merge the two JSON files =====
 
