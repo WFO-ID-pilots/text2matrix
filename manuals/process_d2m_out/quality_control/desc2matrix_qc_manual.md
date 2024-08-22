@@ -46,7 +46,15 @@ Name of characteristic 2: Value
 
 7. With the final word set, populate the output
 
-See below for the metrics that this script returns.
+See below in **Output** for the metrics that this script returns.
+
+## Arguments
+
+| Argument | Description | Required? | Default value |
+| --- | --- | --- | --- |
+| `inputfile` (positional argument) | The input JSON file to process | Yes | |
+| `outfile` (positional argument) | Path to the output tsv file | Yes | |
+| `--verbose` (optional flag) | If true, print the list of words as they species are being processed | No | False |
 
 ## Output
 
@@ -66,10 +74,3 @@ The output is a tsv file with the following columns:
 | `original_only` | `list`, comma-separated | List of words that were only in the original description |
 | `result_only` | `list`, comma-separated | List of words that were only in the output JSON |
 
-## Arguments
-
-| Argument | Description | Required? | Default value |
-| --- | --- | --- | --- |
-| `inputfile` (positional argument) | The input JSON file to process | Yes | |
-| `outfile` (positional argument) | Path to the output tsv file | Yes | |
-| `--verbose` (optional flag) | If true, print the list of words as they species are being processed | No | False |
