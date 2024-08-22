@@ -39,6 +39,10 @@ You can run the makefile to build all targets by typing: `make all`
 
 Specific issues or enhancements can be added to the [issues tracker](https://github.com/WFO-ID-pilots/text2matrix/issues) for this project. More general discussions are also welcomed on the [discussion board](https://github.com/orgs/WFO-ID-pilots/discussions) for the parent project
 
+## _Help, I'm lost!_
+
+Here are some useful documents that can help you navigate the repo content:
+
 ## Contacts
 
 - Nicky Nicolson - [@nickynicolson](https://github.com/nickynicolson)
