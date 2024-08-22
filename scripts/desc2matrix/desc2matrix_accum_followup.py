@@ -3,9 +3,9 @@ import json
 import pandas as pd
 
 from common_scripts import default_prompts # Import the default prompts
-from common_scripts.accumulator import TFTraitAccumulator # Import trait accumulator with initial tabulation and followup questions
+from common_scripts.accumulator import FollowupTraitAccumulator # Import trait accumulator with followup questions
 
-def main(sys_prompt, tab_prompt, prompt, f_prompt):
+def main(sys_prompt, init_prompt, prompt, f_prompt):
     # Create the parser
     parser = argparse.ArgumentParser(description = 'Extract JSON/dict from description files')
 
@@ -15,14 +15,13 @@ def main(sys_prompt, tab_prompt, prompt, f_prompt):
     parser.add_argument('--desctype', required = True, type = str, help = 'The "type" value used for morphological descriptions in the description file')
     parser.add_argument('--sysprompt', required = False, type = str, help = 'Text file storing the system prompt')
     parser.add_argument('--prompt', required = False, type = str, help = 'Text file storing the prompt')
-    parser.add_argument('--tabprompt', required = False, type = str, help = 'Text file storing the prompt to use for tabulating the initial list of characteristics')
+    parser.add_argument('--initprompt', required = False, type = str, help = 'Text file storing the initial prompt (i.e. prompt without [CHARACTER_LIST])')
     parser.add_argument('--fprompt', required = False, type = str, help = 'Text file storing the follow-up prompt')
     parser.add_argument('--silent', required = False, action = 'store_true', help = 'Suppress output showing job progress')
 
     # Run configs
     parser.add_argument('--start', required = False, type = int, default = 0, help = 'Order ID of the species to start transcribing from')
     parser.add_argument('--spnum', required = False, type = int, help = 'Number of species to process descriptions of. Default behaviour is to process all species present in the file')
-    parser.add_argument('--initspnum', required = False, type = int, default = 3, help = 'Number of species to sample to generate the initial list of characteristics from tabulation')
 
     # Model properties
     parser.add_argument('--model', required = False, type = str, default = 'llama3', help = 'Name of base LLM to use')
@@ -45,9 +44,9 @@ def main(sys_prompt, tab_prompt, prompt, f_prompt):
     if(args.prompt != None):
         with open(args.prompt, 'r') as fp:
             prompt = fp.read()
-    if(args.tabprompt != None):
-        with open(args.tabprompt, 'r') as fp:
-            tab_prompt = fp.read()
+    if(args.initprompt != None):
+        with open(args.initprompt, 'r') as fp:
+            init_prompt = fp.read()
     if(args.fprompt != None):
         with open(args.fprompt, 'r') as fp:
             f_prompt = fp.read()
@@ -83,15 +82,12 @@ def main(sys_prompt, tab_prompt, prompt, f_prompt):
     }
 
     # Initialise trait accumulator
-    accum = TFTraitAccumulator(sys_prompt, tab_prompt, prompt, f_prompt, args.model, params)
+    accum = FollowupTraitAccumulator(sys_prompt, init_prompt, prompt, f_prompt, args.model, params)
 
-    # ===== Obtain an initial list of characteristics by tabulation =====
-
-    # Sample a number of species to initially tabulate
-    tabdf = descdf.iloc[0:args.initspnum]
+    # ===== Obtain an initial list of characteristics =====
 
     # Generate initial trait list
-    accum.extract_init_chars(tabdf['coreid'], tabdf['description'])
+    accum.extract_init_chars(descs[0], not args.silent)
 
     # ===== Accumulate traits =====
 
@@ -117,4 +113,4 @@ def main(sys_prompt, tab_prompt, prompt, f_prompt):
     
 
 if __name__ == '__main__':
-    main(default_prompts.global_sys_prompt, default_prompts.global_tablulation_prompt, default_prompts.global_prompt, default_prompts.global_followup_prompt)
+    main(default_prompts.global_sys_prompt, default_prompts.global_init_prompt, default_prompts.global_accum_prompt, default_prompts.global_followup_prompt)

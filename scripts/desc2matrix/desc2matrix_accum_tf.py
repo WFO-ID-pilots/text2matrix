@@ -1,13 +1,11 @@
 import argparse
 import json
-from ollama import Client
 import pandas as pd
-import copy
 
-from common_scripts import default_prompts # Import default prompts
-from common_scripts.accumulator import TabTraitAccumulator # Import class for trait accumulation with tabulation
+from common_scripts import default_prompts # Import the default prompts
+from common_scripts.accumulator import TFTraitAccumulator # Import trait accumulator with initial tabulation and followup questions
 
-def main(sys_prompt, tab_prompt, prompt):
+def main(sys_prompt, tab_prompt, prompt, f_prompt):
     # Create the parser
     parser = argparse.ArgumentParser(description = 'Extract JSON/dict from description files')
 
@@ -18,6 +16,7 @@ def main(sys_prompt, tab_prompt, prompt):
     parser.add_argument('--sysprompt', required = False, type = str, help = 'Text file storing the system prompt')
     parser.add_argument('--prompt', required = False, type = str, help = 'Text file storing the prompt')
     parser.add_argument('--tabprompt', required = False, type = str, help = 'Text file storing the prompt to use for tabulating the initial list of characteristics')
+    parser.add_argument('--fprompt', required = False, type = str, help = 'Text file storing the follow-up prompt')
     parser.add_argument('--silent', required = False, action = 'store_true', help = 'Suppress output showing job progress')
 
     # Run configs
@@ -31,7 +30,7 @@ def main(sys_prompt, tab_prompt, prompt):
     parser.add_argument('--seed', required = False, type = int, default = 1, help = 'Model seed value')
     parser.add_argument('--repeatlastn', required = False, type = int, default = 0, help = 'Number of prompts for the model to look back to prevent repetition')
     parser.add_argument('--numpredict', required = False, type = int, default = 2048, help = 'Maximum number of tokens the model can generate')
-    parser.add_argument('--numctx', required = False, type = int, default = 8192, help = 'Size of context window used to generate the token')
+    parser.add_argument('--numctx', required = False, type = int, default = 32768, help = 'Size of context window used to generate the token')
     parser.add_argument('--topk', required = False, type = int, help = 'A higher value (e.g. 100) will give more diverse answers, while a lower value (e.g. 10) will be more conservative.')
     parser.add_argument('--topp', required = False, type = float, help = 'A higher value (e.g., 0.95) will lead to more diverse text, while a lower value (e.g., 0.5) will generate more focused and conservative text.')
     # Parse the arguments
@@ -49,6 +48,9 @@ def main(sys_prompt, tab_prompt, prompt):
     if(args.tabprompt != None):
         with open(args.tabprompt, 'r') as fp:
             tab_prompt = fp.read()
+    if(args.fprompt != None):
+        with open(args.fprompt, 'r') as fp:
+            f_prompt = fp.read()
 
     # ===== Read descfile =====
 
@@ -81,11 +83,15 @@ def main(sys_prompt, tab_prompt, prompt):
     }
 
     # Initialise trait accumulator
-    accum = TabTraitAccumulator(sys_prompt, tab_prompt, prompt, args.model, params)
+    accum = TFTraitAccumulator(sys_prompt, tab_prompt, prompt, f_prompt, args.model, params)
 
-    # ===== Generate initial trait list =====
+    # ===== Obtain an initial list of characteristics by tabulation =====
 
-    accum.extract_init_chars(descdf.iloc[0:args.initspnum]['coreid'], descs[0:args.initspnum], not args.silent)
+    # Sample a number of species to initially tabulate
+    tabdf = descdf.iloc[0:args.initspnum]
+
+    # Generate initial trait list
+    accum.extract_init_chars(tabdf['coreid'], tabdf['description'], not args.silent)
 
     # ===== Accumulate traits =====
 
@@ -108,5 +114,7 @@ def main(sys_prompt, tab_prompt, prompt):
         with open(args.outputfile, 'w') as outfile:
             json.dump(summ_dict, outfile)
 
+    
+
 if __name__ == '__main__':
-    main(default_prompts.global_sys_prompt, default_prompts.global_tablulation_prompt, default_prompts.global_accum_prompt)
+    main(default_prompts.global_sys_prompt, default_prompts.global_tablulation_prompt, default_prompts.global_accum_prompt, default_prompts.global_followup_prompt)

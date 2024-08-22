@@ -108,4 +108,4 @@ def main(sys_prompt, prompt):
             json.dump(summ_dict, outfile)
 
 if __name__ == '__main__':
-    main(default_prompts.global_sys_prompt, default_prompts.global_prompt)
+    main(default_prompts.global_sys_prompt, default_prompts.global_ext_prompt)

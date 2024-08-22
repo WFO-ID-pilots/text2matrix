@@ -112,4 +112,4 @@ def main(sys_prompt, prompt, f_prompt):
     
 
 if __name__ == '__main__':
-    main(default_prompts.global_sys_prompt, default_prompts.global_prompt, default_prompts.global_followup_prompt)
+    main(default_prompts.global_sys_prompt, default_prompts.global_ext_prompt, default_prompts.global_followup_prompt)
