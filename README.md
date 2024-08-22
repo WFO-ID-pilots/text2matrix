@@ -35,13 +35,16 @@ You can see what steps the makefile will execute by typing `make all --dry-run`
 
 You can run the makefile to build all targets by typing: `make all`
 
+## Getting started
+
+Once you have set up the environment by following the instructions above, here are some useful documents that can help you navigate the repo content and begin development:
+
+[Content summary](content_summary.md): Summary of the repo content structure & how scripts work together
+[desc2matrix code architecture](desc2matrix_architecture.md): Summary of the code architecture of the `desc2matrix` scripts responsible for converting unstructured species descriptions into structured output
+
 ## Contributing
 
 Specific issues or enhancements can be added to the [issues tracker](https://github.com/WFO-ID-pilots/text2matrix/issues) for this project. More general discussions are also welcomed on the [discussion board](https://github.com/orgs/WFO-ID-pilots/discussions) for the parent project
-
-## _Help, I'm lost!_
-
-Here are some useful documents that can help you navigate the repo content:
 
 ## Contacts
 
