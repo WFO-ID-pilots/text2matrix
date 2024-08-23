@@ -9,11 +9,11 @@ downloads/%.zip:
 	mkdir -p downloads
 	wget ${wget_options} -O $@ ${$*_dwca_url}
 
-data/%-taxa.txt: dwca2csv.py downloads/%_taxa.zip
+data/%-taxa.txt: scripts/init/dwca2csv.py downloads/%_taxa.zip
 	mkdir -p data
 	python $^ --output_type=core $@
 
-data/%-desc.txt: dwca2csv.py downloads/%_desc.zip
+data/%-desc.txt: scripts/init/dwca2csv.py downloads/%_desc.zip
 	mkdir -p data
 	python $^ --output_type=desc $@
 
