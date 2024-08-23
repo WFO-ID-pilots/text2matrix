@@ -1,6 +1,6 @@
-# desc2matrix_qc.py user manual
+# compare_d2m_desc.py user manual
 
-This document is the up-to-date manual for using `desc2matrix_qc.py`, which processes the JSON output of a `desc2matrix` script and calculate word coverage summary statistics.
+This document is the up-to-date manual for using `compare_d2m_desc.py`, which processes the JSON output of a `desc2matrix` script to compare the extracted characteristics and their corresponding original descriptions and calculate word coverage summary statistics.
 
 ## Input
 
