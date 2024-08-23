@@ -4,4 +4,4 @@ This document explains the architecture of the common classes and functions used
 
 ## Trait accumulator & extractor
 
-<img src="imgs/text2matrix_classes.svg" alt="desc2matrix class diagram" width="500"/>
+<img src="imgs/text2matrix_classes.svg" alt="desc2matrix class diagram" width="100%"/>
