@@ -41,7 +41,7 @@ Once you have set up the environment by following the instructions above, here a
 
 [Content summary](content_summary.md): Summary of the repo content structure & how scripts work together.
 
-[desc2matrix code architecture](desc2matrix_architecture.md): Summary of the code architecture of the `desc2matrix` scripts responsible for converting unstructured species descriptions into structured output.
+[desc2matrix documentation](desc2matrix_doc.md): High-level documentation for `desc2matrix` scripts responsible for converting unstructured species descriptions into structured output. Includes simple code examples
 
 ## Contributing
 
