@@ -66,11 +66,14 @@ The output is a tsv file with the following columns:
 | `status` | `str` | Status code for the species returned by `desc2matrix` script |
 | `nwords_original` | `int` | Number of words in the original description text |
 | `nwords_result` | `int` | Number of words in the JSON output |
+| `nwords_val` | `int` | Number of words in the JSON output, NA if the run didn't suceed |
 | `nwords_recovered` | `int` | Number of words in the original text AND the output JSON |
 | `nwords_omitted` | `int` | Number of omitted words |
 | `nwords_created` | `int` | Number of words in the output that was not in the original text description |
-| `prop_recovered` | `float` | Proportion of words in the original description that was included in the output |
+| `nwords_recovered_val` | `int` | Number of words in the original text AND the characteristic values in the output |
+| `nwords_created_val` | `int` | Number of words 'created' in the extracted characteristic value; NA if the run did not succeed |
 | `common_words` | `list`, comma-separated | List of words shared by the original description and the output JSON |
 | `original_only` | `list`, comma-separated | List of words that were only in the original description |
 | `result_only` | `list`, comma-separated | List of words that were only in the output JSON |
-
+| `common_words_val` | `list`, comma-separated | List of words that were shared between the original description and the extracted trait values |
+| `val_only` | `list`, comma-separated | List of words that were found in the output trait values but not in the original description |
