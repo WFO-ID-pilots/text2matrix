@@ -7,8 +7,10 @@ import nltk
 import inflect
 import re
 
+nltk.download('punkt_tab')
 nltk.download('punkt')
 nltk.download('stopwords')
+nltk.download('averaged_perceptron_tagger_eng')
 nltk.download('averaged_perceptron_tagger')
 from nltk.corpus import stopwords
 
