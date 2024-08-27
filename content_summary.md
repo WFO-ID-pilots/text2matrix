@@ -7,7 +7,7 @@ This document summarises the content currently in the repo and provide explanati
 Some of these scripts, found in [scripts](scripts/), have corresponding user manuals under [manuals](manuals/). The links to the manuals are provided where relevant.
 
 ### init
-
+test
 | File name | Description |
 | --- | --- |
 | [dwca2csv.py](scripts/init/dwca2csv.py) | Script used by Makefile to get taxa information from WFO |
