@@ -1,0 +1,106 @@
+# Install package manager if not installed already
+# install.packages("pacman")
+
+# Load necessary packages
+pacman::p_load("tidyverse", "here", "jsonlite", "readr")
+
+# List containing the data
+accum_dats <- list(
+  subset = read_json(here::here("../../script_output/desc2matrix/accum/accum_subset_2nd.json")),
+  subset_tab = read_json(here::here("../../script_output/desc2matrix/accum/accum_tab_subset_2nd.json")),
+  subset_f = read_json(here::here("../../script_output/desc2matrix/accum/accum_f_subset_2nd.json")),
+  subset_tf = read_json(here::here("../../script_output/desc2matrix/accum/accum_tf_subset_2nd.json"))
+)
+
+method_names <- names(accum_dats)
+method_labels <- c(
+  "A",
+  "AT",
+  "AF",
+  "ATF"
+)
+names(method_labels) <- method_names
+
+# ===== Generate accumulation curve =====
+
+# Get charlist length histories
+accum_charlens <- lapply(accum_dats, function(accum_d) { accum_d$charlist_len_history })
+
+# Get incidences of failures
+accum_failures <- lapply(accum_dats, function(accum_d) {
+  sapply(seq_along(accum_d$data), function(spdat_id) {
+    spdat <- accum_d$data[[spdat_id]]
+    if(spdat$status == "success") { NA }
+    else { spdat_id }
+  })
+})
+
+fail_df <- tibble(
+  sp_id = do.call(c, lapply(seq_along(accum_failures), function(run_id) {
+    accum_fail_ids <- accum_failures[[run_id]]
+    # Insert NA to match the length of the charlens history
+    c(rep(NA, length(accum_charlens[[run_id]]) - length(accum_fail_ids)), accum_fail_ids)
+  })),
+  charlen = do.call(c, unlist(accum_charlens, recursive=FALSE))
+)
+
+# Method names
+method_list <- lapply(seq_along(accum_charlens), function(i) { rep(method_names[i], length(accum_charlens[[i]])) })
+
+# Species sequential IDs
+id_list <- lapply(accum_charlens, function(charlens) { seq(ifelse(is.na(charlens[[1]]), 0, 1), length.out = length(charlens)) })
+sp_ids <- unlist(id_list)
+
+# Build tibble
+accum_df <- tibble(
+  sp_id = sp_ids, # Number of species processed
+  charlen = unlist(accum_charlens), # Number of characteristics retrieved from the runs
+  method = unlist(method_list)
+)
+
+# Colourblind-friendly palette
+cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
+          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+# Plot accumulation curve
+accum_plt <- ggplot() +
+  geom_line(data = accum_df, aes(x = sp_id, y = charlen, color = method)) +
+  geom_point(data = fail_df, aes(x = sp_id, y = charlen), shape = 4) +
+  labs(
+    x = "Number of species processed",
+    y = "Number of characteristics",
+    color = "Method"
+  ) +
+  scale_color_manual(values = cbp1, labels = method_labels, breaks = method_names) +
+  theme_bw() +
+  theme(
+    legend.position = "bottom",
+    legend.margin = margin(t = 0, unit = "cm")
+  ) +
+  guides(color = guide_legend(nrow = 1))
+accum_plt
+
+# ===== Trait comparison with traits in key =====
+
+# Get list of traits in the key
+key_trait_list <- unlist(strsplit(read_file("../../script_output/process_xper/sdd2charlist/solanum_charlist.txt"), "; "))
+key_trait_list
+
+# Extract final list of traits
+final_charlists <- lapply(accum_dats, function(dat) {
+  # Return the last elements in the charlist history
+  unlist(dat$charlist_history[[length(dat$charlist_history)]])
+})
+final_charlists
+
+# Categorise traits based on whether it is found in the key trait list
+final_chars_isinkey <- lapply(final_charlists, function(charlist) {
+  # For each characteristic
+  sapply(charlist, function(trait) {
+    # Determine whether the characteristic is in the key trait list
+    trait %in% key_trait_list
+  })
+})
+final_chars_isinkey
+
+ggsave(here::here("../../script_output/visualise_d2m_out/accum.png"), accum_plt, width = 4, height = 3)
