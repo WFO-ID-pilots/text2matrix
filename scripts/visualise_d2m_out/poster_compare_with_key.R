@@ -46,37 +46,37 @@ runs_df <- bind_rows(run_dfs) %>%
 
 # ===== Run status plots =====
 
-status_barplot <- ggplot(runs_df, aes(x = run_name, fill = status)) +
-  geom_bar(width = .5) +
-  scale_x_discrete(
-    labels = rev(run_labels),
-    limits = rev
-  ) +
-  scale_y_continuous(
-    breaks = seq(0, 500, 100)
-  ) +
-  scale_fill_manual(
-    labels = c("Success", "Invalid JSON output in initial prompt", "Invalid JSON output in follow-up prompt"),
-    values = c("#abf2a7", "#facc16", "#ed1c09"),
-    breaks = c("success", "invalid_json", "invalid_json_followup")
-  ) +
-  labs(
-    y = "Count",
-    x = "Run",
-    fill = "Status"
-  ) +
-  theme_classic() +
-  theme(
-    legend.position = "bottom",
-    panel.grid.major.y = element_line(color = "lightgrey", linewidth = 0.25)
-  ) +
-  guides(fill = "none")
-  # guides(fill = guide_legend(ncol=1,byrow=TRUE))
+# status_barplot <- ggplot(runs_df, aes(x = run_name, fill = status)) +
+#   geom_bar(width = .5) +
+#   scale_x_discrete(
+#     labels = rev(run_labels),
+#     limits = rev
+#   ) +
+#   scale_y_continuous(
+#     breaks = seq(0, 500, 100)
+#   ) +
+#   scale_fill_manual(
+#     labels = c("Success", "Invalid JSON output in initial prompt", "Invalid JSON output in follow-up prompt"),
+#     values = c("#abf2a7", "#facc16", "#ed1c09"),
+#     breaks = c("success", "invalid_json", "invalid_json_followup")
+#   ) +
+#   labs(
+#     y = "Count",
+#     x = "Run",
+#     fill = "Status"
+#   ) +
+#   theme_classic() +
+#   theme(
+#     legend.position = "bottom",
+#     panel.grid.major.y = element_line(color = "lightgrey", linewidth = 0.25)
+#   ) +
+#   guides(fill = "none")
+#   # guides(fill = guide_legend(ncol=1,byrow=TRUE))
+# 
+# status_barplot
+# ggsave(here::here("../../script_output/visualise_d2m_out/status_key.png"), status_barplot, width = 3.5, height = 4)
 
-status_barplot
-ggsave(here::here("../../script_output/visualise_d2m_out/status_key.png"), status_barplot, width = 3.5, height = 4)
-
-# ===== Common characteristics proportion plots =====
+# ===== Comparison between key and generated output =====
 
 # Colourblind-friendly palette
 cbp1 <- c("#E69F00", "#56B4E9", "#009E73",
@@ -85,24 +85,27 @@ cbp1 <- c("#E69F00", "#56B4E9", "#009E73",
 runs_df <- runs_df %>%
   mutate(prop_chars_recovered = nchars_common / nchars_key)
 
-ext_prop_plt <- ggplot(runs_df, aes(x = run_name, y = prop_chars_recovered, fill = run_name)) +
+ext_prop_plt <- ggplot(runs_df, aes(y = run_name, x = prop_chars_recovered, fill = run_name)) +
   geom_boxplot() +
   scale_fill_manual(
     values = cbp1
   ) +
-  scale_x_discrete(
-    labels = run_labels
+  scale_y_discrete(
+    labels = rev(run_labels),
+    limits = rev
   ) +
-  scale_y_continuous(breaks = seq(0, 1, by = 0.1)) +
+  scale_x_continuous(breaks = seq(0, 1, by = 0.1)) +
   labs(
-    x = "Method",
-    y = "Proportion of traits extracted"
+    x = "Proportion of traits extracted"
   ) +
   theme_classic() +
   theme(
-    panel.grid.major.y = element_line(color = "lightgrey", linewidth = 0.25)
+    axis.text.y = element_text(angle = 45, vjust = 0.5, hjust=1),
+    panel.grid.major.x = element_line(color = "lightgrey", linewidth = 0.25),
+    axis.title.y = element_blank()
   ) +
   guides(fill = "none")
 
 ext_prop_plt
-ggsave(here::here("../../script_output/visualise_d2m_out/extracted_chars_key.png"), ext_prop_plt, width = 2.7, height = 2.7)
+ggsave(here::here("../../script_output/visualise_d2m_out/extracted_chars_key.png"), ext_prop_plt, width = 3, height = 1.7)
+
