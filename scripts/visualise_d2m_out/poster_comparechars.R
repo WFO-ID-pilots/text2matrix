@@ -11,27 +11,19 @@ pacman::p_load("tidyverse", "here", "plyr")
 # Run names
 run_names <- c(
   "wcharlist",
-  "wcharlist_sgenlist",
-  "wcharlist_lgenlist",
-  "wcharlist_f",
-  "wcharlist_f_sgenlist",
-  "wcharlist_f_lgenlist"
+  "wcharlist_f"
 )
 names(run_names) <- run_names
 
 # Run labels
 run_labels <- c(
-  "K",
-  "GS",
-  "GL",
-  "K, F",
-  "GS, F",
-  "GL, F"
+  "No follow-up Q",
+  "With follow-up Q"
 )
 
 # File paths
 tsv_paths <- lapply(run_names, function(run_name) {
-  paste0("../../script_output/process_d2m_out/quality_control/compare_chars/", run_name, "_comp.tsv")
+  paste0("../../script_output/process_d2m_out/compare_d2m_key_chars/", run_name, "_comp_2nd.tsv")
 })
 
 # Import files
@@ -82,29 +74,35 @@ status_barplot <- ggplot(runs_df, aes(x = run_name, fill = status)) +
   # guides(fill = guide_legend(ncol=1,byrow=TRUE))
 
 status_barplot
-ggsave(here::here("../../script_output/visualise_d2m_out/poster/status.png"), status_barplot, width = 3.5, height = 4)
-
-runs_df
+ggsave(here::here("../../script_output/visualise_d2m_out/status_key.png"), status_barplot, width = 3.5, height = 4)
 
 # ===== Common characteristics proportion plots =====
+
+# Colourblind-friendly palette
+cbp1 <- c("#E69F00", "#56B4E9", "#009E73",
+          "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
 runs_df <- runs_df %>%
   mutate(prop_chars_recovered = nchars_common / nchars_key)
 
-ext_prop_plt <- ggplot(runs_df, aes(x = run_name, y = prop_chars_recovered)) +
+ext_prop_plt <- ggplot(runs_df, aes(x = run_name, y = prop_chars_recovered, fill = run_name)) +
   geom_boxplot() +
+  scale_fill_manual(
+    values = cbp1
+  ) +
   scale_x_discrete(
     labels = run_labels
   ) +
   scale_y_continuous(breaks = seq(0, 1, by = 0.1)) +
   labs(
-    x = "Run mode",
-    y = "Proportion of common trait names between output and key"
+    x = "Method",
+    y = "Proportion of traits extracted"
   ) +
   theme_classic() +
   theme(
     panel.grid.major.y = element_line(color = "lightgrey", linewidth = 0.25)
-  )
+  ) +
+  guides(fill = "none")
 
 ext_prop_plt
-ggsave(here::here("../../script_output/visualise_d2m_out/poster/extracted_chars.png"), ext_prop_plt, width = 3.5, height = 4)
+ggsave(here::here("../../script_output/visualise_d2m_out/extracted_chars_key.png"), ext_prop_plt, width = 2.7, height = 2.7)

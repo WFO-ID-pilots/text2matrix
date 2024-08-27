@@ -2,22 +2,18 @@
 # install.packages("pacman")
 
 # Load necessary packages
-pacman::p_load("tidyverse", "here", "jsonlite", "readr")
+pacman::p_load("tidyverse", "here", "jsonlite", "readr", "ggVennDiagram")
 
 # List containing the data
 accum_dats <- list(
   subset = read_json(here::here("../../script_output/desc2matrix/accum/accum_subset_2nd.json")),
-  subset_tab = read_json(here::here("../../script_output/desc2matrix/accum/accum_tab_subset_2nd.json")),
-  subset_f = read_json(here::here("../../script_output/desc2matrix/accum/accum_f_subset_2nd.json")),
-  subset_tf = read_json(here::here("../../script_output/desc2matrix/accum/accum_tf_subset_2nd.json"))
+  subset_f = read_json(here::here("../../script_output/desc2matrix/accum/accum_f_subset_2nd.json"))
 )
 
 method_names <- names(accum_dats)
 method_labels <- c(
-  "A",
-  "AT",
-  "AF",
-  "ATF"
+  "No follow-up Q",
+  "With follow-up Q"
 )
 names(method_labels) <- method_names
 
@@ -59,7 +55,7 @@ accum_df <- tibble(
 )
 
 # Colourblind-friendly palette
-cbp1 <- c("#999999", "#E69F00", "#56B4E9", "#009E73",
+cbp1 <- c("#E69F00", "#56B4E9", "#009E73",
           "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
 # Plot accumulation curve
@@ -68,7 +64,7 @@ accum_plt <- ggplot() +
   geom_point(data = fail_df, aes(x = sp_id, y = charlen), shape = 4) +
   labs(
     x = "Number of species processed",
-    y = "Number of characteristics",
+    y = "Number of trait names",
     color = "Method"
   ) +
   scale_color_manual(values = cbp1, labels = method_labels, breaks = method_names) +
@@ -77,8 +73,9 @@ accum_plt <- ggplot() +
     legend.position = "bottom",
     legend.margin = margin(t = 0, unit = "cm")
   ) +
-  guides(color = guide_legend(nrow = 1))
+  guides(color = guide_legend(nrow = 2))
 accum_plt
+ggsave(here::here("../../script_output/visualise_d2m_out/accum.png"), accum_plt, width = 2.7, height = 3)
 
 # ===== Trait comparison with traits in key =====
 
@@ -93,14 +90,25 @@ final_charlists <- lapply(accum_dats, function(dat) {
 })
 final_charlists
 
-# Categorise traits based on whether it is found in the key trait list
-final_chars_isinkey <- lapply(final_charlists, function(charlist) {
-  # For each characteristic
-  sapply(charlist, function(trait) {
-    # Determine whether the characteristic is in the key trait list
-    trait %in% key_trait_list
-  })
-})
-final_chars_isinkey
+# Insert key trait list
+final_charlists$key <- key_trait_list
+final_charlists
 
-ggsave(here::here("../../script_output/visualise_d2m_out/accum.png"), accum_plt, width = 4, height = 3)
+setdiff(intersect(final_charlists$subset, final_charlists$subset_f), final_charlists$key)
+
+# Extract traits found in the key trait list
+final_chars_inkey <- lapply(final_charlists, function(charlist) {
+  charlist[charlist %in% key_trait_list]
+})
+final_chars_inkey
+
+# Draw Venn diagram of characteristics
+char_venn <- ggVennDiagram(final_charlists) +
+  scale_fill_gradient(low = "#ffffff", high = "#333333") +
+  labs(
+    title = "Venn diagram of final characteristics",
+    fill = "Count"
+  )
+char_venn
+ggsave(here::here("../../script_output/visualise_d2m_out/accum_venn.png"), char_venn, width = 5, height = 4, bg = "white")
+
