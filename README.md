@@ -39,9 +39,9 @@ You can run the makefile to build all targets by typing: `make all`
 
 Once you have set up the environment by following the instructions above, here are some useful documents that can help you navigate the repo content and begin development:
 
-[Content summary](content_summary.md): Summary of the repo content structure & how scripts work together.
+[Content summary](CONTENT_SUMMARY.md): Summary of the repo content structure & how scripts work together.
 
-[desc2matrix documentation](desc2matrix_doc.md): High-level documentation for `desc2matrix` scripts responsible for converting unstructured species descriptions into structured output. Includes simple code examples
+[desc2matrix documentation](DESC2MATRIX_DOC.md): High-level documentation for `desc2matrix` scripts responsible for converting unstructured species descriptions into structured output. Includes simple code examples
 
 ## Contributing
 
