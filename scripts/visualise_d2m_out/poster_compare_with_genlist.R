@@ -12,7 +12,7 @@ run_labels <- c("No follow-up Q", "With follow-up Q")
 
 # JSON File paths
 json_paths <- lapply(run_names, function(run_name) {
-  paste0("../../script_output/desc2matrix/wcharlist/", run_name, "_subset_2nd.json")
+  paste0("../../script_output/desc2matrix/wcharlist/", run_name, "_subset.json")
 })
 
 # Read data
@@ -105,7 +105,7 @@ names(method_lab) <- run_names
 
 prop_given_boxplots <- ggplot(compare_merged_df, aes(x = prop_given_in_actual, y = method, fill = method)) +
   geom_boxplot() +
-  scale_x_continuous(breaks = seq(0, 1, by = 0.1), limits = c(0, 1)) +
+  scale_x_continuous(breaks = seq(0, 1, by = 0.2), limits = c(0, 1)) +
   scale_y_discrete(
     labels = rev(run_labels),
     limits = rev
@@ -124,7 +124,16 @@ prop_given_boxplots <- ggplot(compare_merged_df, aes(x = prop_given_in_actual, y
   ) +
   guides(fill = "none")
 prop_given_boxplots
-ggsave(here::here("../../script_output/visualise_d2m_out/extracted_chars_genlist.png"), prop_given_boxplots, width = 3, height = 1.7)
+ggsave(here::here("../../script_output/visualise_d2m_out/extracted_chars_sgenlist.png"), prop_given_boxplots, width = 3, height = 1.7)
+
+# Calculate medians for each group
+compare_merged_df %>%
+  group_by(method) %>%
+  dplyr::summarize(
+    med = median(prop_given_in_actual, na.rm = TRUE)
+  )
+
+
 # Plot proportions of output traits that were in the provided trait list
 
 # prop_actual_histplots <- ggplot(compare_merged_df, aes(x = prop_actual_in_given)) +

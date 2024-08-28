@@ -17,7 +17,7 @@ run_labels <- c(
 
 # File paths
 tsv_paths <- lapply(run_names, function(run_name) {
-  paste0("../../script_output/process_d2m_out/compare_d2m_desc/", run_name, "_subset_qc_2nd.tsv")
+  paste0("../../script_output/process_d2m_out/compare_d2m_desc/", run_name, "_subset_qc.tsv")
 })
 
 # Import files
@@ -71,4 +71,11 @@ hall_prop_plt <- ggplot(runs_df, aes(y = run_name, x = prop_chars_created, fill 
 
 hall_prop_plt
 
+
 ggsave(here::here("../../script_output/visualise_d2m_out/created_words.png"), hall_prop_plt, width = 3, height = 2.2)
+
+
+quantile(runs_df$prop_chars_created, probs = seq(0, 1, 0.05), na.rm = TRUE)
+length(runs_df$prop_chars_created[runs_df$prop_chars_created < 0.1])
+nrow(runs_df)
+1932 / 2184 * 100
