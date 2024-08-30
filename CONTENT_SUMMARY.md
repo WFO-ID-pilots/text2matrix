@@ -90,9 +90,16 @@ These files are found under [common_scripts](scripts/process_d2m_out/common_scri
 
 ### visualise_d2m_out
 
-This folder contains the R scripts used to generate figures from the script output.
+This folder contains the R scripts used to generate figures from the script output. Currently, the scripts in the main directory are ones that were used in making the summary poster (https://doi.org/10.5281/zenodo.13385757).
 
-TO BE COMPLETED
+| File name | Description | Manual |
+| --- | --- | --- |
+| [poster_accumulation.R](scripts/visualise_d2m_out/poster_accumulation.R) | R script used to generate the accumulation curve seen in the poster |
+| [poster_compare_with_genlist.R](scripts/visualise_d2m_out/poster_compare_with_genlist.R] | R script used to generate quality control figures comparing d2m output with structured traits in the _Solanum_ key |
+| [poster_compare_with_key.R](scripts/visualise_d2m_out/poster_compare_with_key.R] | R script used to generate quality control figures comparing d2m output with original WFO descriptions |
+| [poster_hallucination.R](scripts/visualise_d2m_out/poster_hallucination.R] | R script used to generate quality control figures quantifying the level of hallucination |
+
+Other files in backup are unorganised R files used to generate figures in GitHub discussions. They may be removed.
 
 ### process_xper
 
