@@ -101,9 +101,9 @@ This folder contains the R scripts used to generate figures from the script outp
 | File name | Description | Manual |
 | --- | --- | --- |
 | [poster_accumulation.R](scripts/visualise_d2m_out/poster_accumulation.R) | R script used to generate the accumulation curve seen in the poster |
-| [poster_compare_with_genlist.R](scripts/visualise_d2m_out/poster_compare_with_genlist.R] | R script used to generate quality control figures comparing d2m output with structured traits in the _Solanum_ key |
-| [poster_compare_with_key.R](scripts/visualise_d2m_out/poster_compare_with_key.R] | R script used to generate quality control figures comparing d2m output with original WFO descriptions |
-| [poster_hallucination.R](scripts/visualise_d2m_out/poster_hallucination.R] | R script used to generate quality control figures quantifying the level of hallucination |
+| [poster_compare_with_genlist.R](scripts/visualise_d2m_out/poster_compare_with_genlist.R) | R script used to generate quality control figures comparing d2m output with structured traits in the _Solanum_ key |
+| [poster_compare_with_key.R](scripts/visualise_d2m_out/poster_compare_with_key.R) | R script used to generate quality control figures comparing d2m output with original WFO descriptions |
+| [poster_hallucination.R](scripts/visualise_d2m_out/poster_hallucination.R) | R script used to generate quality control figures quantifying the level of hallucination |
 
 Other files in backup are unorganised R files used to generate figures in GitHub discussions. They may be removed.
 
