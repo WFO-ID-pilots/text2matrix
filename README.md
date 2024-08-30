@@ -6,6 +6,12 @@ This projects explores how we could use a large language model to reformat text 
 
 For a summary of the current results obtained using these scripts, please see here: https://doi.org/10.5281/zenodo.13385757.
 
+The following guide documents may be useful for development:
+
+[Content summary](CONTENT_SUMMARY.md): Summary of the repo content structure & how scripts work together.
+
+[desc2matrix documentation](DESC2MATRIX_DOC.md): High-level documentation for `desc2matrix` scripts responsible for converting unstructured species descriptions into structured output. Includes simple code examples.
+
 ## Pre-requisites
 
 An environment capable of running Python, the build tool `make` and the `wget` utility. 
@@ -36,14 +42,6 @@ A complete run will download the specified DWCA files from the World Flora Onlin
 You can see what steps the makefile will execute by typing `make all --dry-run`
 
 You can run the makefile to build all targets by typing: `make all`
-
-## Getting started
-
-Once you have set up the environment by following the instructions above, here are some useful documents that can help you navigate the repo content and begin development:
-
-[Content summary](CONTENT_SUMMARY.md): Summary of the repo content structure & how scripts work together.
-
-[desc2matrix documentation](DESC2MATRIX_DOC.md): High-level documentation for `desc2matrix` scripts responsible for converting unstructured species descriptions into structured output. Includes simple code examples
 
 ## Contributing
 
