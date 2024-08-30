@@ -11,7 +11,9 @@ The diagram above summarises how the different scripts, found in [scripts](scrip
 Some of these scripts have corresponding user manuals under [manuals](manuals/). The links to the manuals are provided where relevant.
 
 ### init
-test
+
+Script initialising the workspace.
+
 | File name | Description |
 | --- | --- |
 | [dwca2csv.py](scripts/init/dwca2csv.py) | Script used by Makefile to get taxa information from WFO |
