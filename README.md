@@ -1,8 +1,10 @@
 # text2matrix
 
-## Rationale
+## Rationale & Overview
 
 This projects explores how we could use a large language model to reformat text species descriptions into species / character matrices, suitable for building multi-entry identification keys.
+
+For a summary of the current results obtained using these scripts, please see here: https://doi.org/10.5281/zenodo.13385757.
 
 ## Pre-requisites
 
