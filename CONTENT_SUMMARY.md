@@ -4,7 +4,11 @@ This document summarises the content currently in the repo and provide explanati
 
 ## Scripts
 
-Some of these scripts, found in [scripts](scripts/), have corresponding user manuals under [manuals](manuals/). The links to the manuals are provided where relevant.
+<img src="imgs/pipeline_summary_082024.png">
+
+The diagram above summarises how the different scripts, found in [scripts](scripts/) are currently working together.
+
+Some of these scripts have corresponding user manuals under [manuals](manuals/). The links to the manuals are provided where relevant.
 
 ### init
 test
